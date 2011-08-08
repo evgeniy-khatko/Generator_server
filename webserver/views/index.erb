@@ -1,0 +1,79 @@
+<div id='left_col'>
+<div id="settings">
+	<p class="block_h">Model</p>
+		<%form_tag '/new_file', :enctype=>"multipart/form-data", :method=>"post" do%>
+			<%field_set_tag do%>
+				<table style="margin-left: 15px">	
+					<tr>
+					<td><%=label_tag 'Model location'%></td>
+					<td><%=file_field_tag 'model_location'%></td>
+					<td><%=submit_tag "Load"%></td>
+					</tr>
+				</table>
+	   	<%end%>    
+	   	
+		<%end%>
+	<p class="block_h">Settings</p>
+		<%field_set_tag do%>
+		<table style="margin-left: 15px">
+    	<tr>
+				<td><%=label_tag 'Generator type'%></td>
+				<td><%=select_tag(:generator_type, :class=>'gen_param',:options => ['Full'], :selected => 'Full')%></td>
+			</tr>	
+			<tr>
+				<td><%=label_tag 'Output format'%></td>
+				<td><%=select_tag(:of, :class=>'gen_param',:options => ['txt','csv'], :selected => 'txt')%></td>
+			</tr>	
+		  <tr>
+				<td><%=label_tag 'Start node'%>	</td>
+				<td><%=text_field_tag 'start_node', :class=>'gen_param',:value=>'Start'%></td>
+		  </tr>
+			<tr>
+		  	<td><%=label_tag 'Enable Visualization'%></td>
+		  	<td><%=check_box_tag :enable_visualization, :id=>'enable_visualization',:class=>'gen_param', :checked=>'yes', :onchange=>"switchVisualization()"%></td>
+		  </tr>		  		
+			<tr>
+				<td><%=label_tag 'Delay (ms)'%></td>
+				<td><%=select_tag(:delay, :id=>'delay' ,:class=>'gen_param',:options => ['50','100','200','500','700','1000'], :selected => '500')%></td>
+		  </tr>
+		  <tr>
+		  	<td><%=label_tag 'Extended mode'%></td>
+		  	<td><%=check_box_tag :extended_mode, :class=>'gen_param',:checked =>"yes"%></td>
+		  </tr>
+ 		  <tr>
+		  	<td><%=label_tag 'Debug mode'%></td>
+		  	<td><%=check_box_tag :debug_mode, :class=>'gen_param'%></td>
+		  </tr>
+		</table>
+		<p class='centered'><%=button_tag "Run", :id=>'run', :onclick=>"startGenerator()"%>  <%=submit_tag "Stop", :id=>'stop', :disabled=>true, :onclick=>"stopGenerator()"%></p>		
+		<%end%>	
+	</div>
+
+
+<div id="console">
+	<!--<div id='clear_log'><img src='/img/clear_log.gif' onclick="clearLog()"/></div>-->
+	<p class="block_h" style="color: #A4A4A4">
+		Console	
+	</p>
+
+	<div id='generator_log'>
+
+	</div>	
+</div>
+</div>
+<div id="visualization">
+	<%if flash[:notice]%>	<div id="flash"><%=flash[:notice]%></div><%end%>
+
+	<div id="image">
+		<p class='centered'>FSM Visualization</p>
+	</div>
+</div>
+	<div id="vis_toolbar">
+		<p class="centered">
+				<%=label_tag 'Filter'%>
+				<%=select_tag(:filter, :id=>'filter',:class=>'gen_param',:options => ['dot','circo','neato','fdp','sfdp','twopi'], :selected => session[:filter],:onchange=>"prepareData();ifResizingSupported()")%>
+				</br>
+				</br>
+				<%=button_tag '+', :class=>'resizer',:onclick=>"optype='plus';prepareData()"%> <%=button_tag '-',:class=>'resizer',:onclick=>"optype='minus';prepareData()"%>				
+		 </p>
+	</div>

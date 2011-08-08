@@ -1,0 +1,109 @@
+
+.block_h{text-align: center; font-family: "Comic Sans MS"; font-size: 16px;}
+.centered{text-align: center;}
+
+#banner {
+	position: absolute;
+	top: 0.5%;
+	left: 0%;
+	width: 100%;
+	height: 35px;
+	background-color: #ABBAC6;
+	text-align: center;
+		
+	text-align: center; font-family: "Comic Sans MS"; font-size: 18px
+}
+
+#info{	
+	position: absolute;
+	bottom: 0.5%;
+  left: 0%;
+	width: 100%;
+	height: 35px;
+	background-color: #ABBAC6;
+	text-align: center;
+	
+}
+
+
+#visualization{	
+  position: absolute;	
+	right: 0.5%;
+	top: 40px;
+	bottom: 40px;
+	width: 68%;
+	overflow: auto;
+}
+
+#vis_toolbar{
+  position: fixed;
+	right: 5px;
+	top: 45px;
+	height: auto;
+	width: 120px;
+	z-index: 1;
+	background-color: #E6E6E6;
+	border-style: solid;
+	border-width: 1px;
+	padding: 1px;
+
+}
+
+#settings{	 
+  position: absolute;
+	left: 0%;
+	top: 40px;
+	height: auto;
+	width: 30%;
+	background-color: #E6E6E6;
+	border-style: solid;
+	border-width: 1px;
+	margin-left: 3px;
+	padding: 3px;
+}
+
+#console{
+  position: absolute;
+	left: 0%;
+	bottom: 40px;
+  width: 30%;
+	background-color: #2E2E2E;
+	border-style: solid;
+	border-width: 1px;
+	margin-left: 3px;
+	padding: 3px;
+	color: #F6CED8;	
+}
+
+#generator_log{
+	position: relative;
+	top: -10px;
+	overflow: auto;
+	font-size: small;    
+	padding-left: 3px;
+	z-index: 1;
+}
+
+#clear_log{
+	position: relative;
+	float: right;
+	top: 50px;
+	right: 30px;
+	z-index: 1
+}
+
+#flash{
+	position: relative;
+	top: 10px;
+  left: 5%;
+	width: 60%;
+	background-color: #E6E6E6;
+	text-align: center;	
+	color: #B40431;
+	font-weight: bold;
+	z-index: 2;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #000000;
+}
+.valignmiddle{vertical-align: middle}

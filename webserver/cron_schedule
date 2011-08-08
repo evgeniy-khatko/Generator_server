@@ -1,0 +1,1 @@
+30 16 * * 1-5 /srv/www/generator/webserver/remove_garbiage.sh
