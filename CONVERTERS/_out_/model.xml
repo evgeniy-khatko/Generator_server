@@ -1,0 +1,409 @@
+<fsm>
+    <state id='65880360' name='Home' inputs='' description='Axure.Document.RPPage' main='true'/>
+    <state id='19299281' name='New database' inputs='set_pwd=&apos;&apos;; confirm_pwd=set_pwd+&apos;foo&apos;
+set_pwd=&apos;&apos;; confirm_pwd=set_pwd
+set_pwd=&apos;123&apos;; confirm_pwd=set_pwd' description='Axure.Document.RPPage' main='true'/>
+    <state id='46007650' name='main_menu' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='657479' name='wrong_pwd_dialog' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='53255854' name='empty_pwd_dialog' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='34594790' name='not_matched_pwds_dialog' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='50714607' name='Login' inputs='pwd=correct_pwd+&apos;foo&apos;
+pwd=correct_pwd' description='Axure.Document.RPPage' main='true'/>
+    <state id='10789421' name='main_menu' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='22044110' name='wrong_pwd_dialog' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='31138264' name='Explorer' inputs='' description='Axure.Document.RPPage' main='true'/>
+    <state id='58396974' name='main_menu' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='59022586' name='popup_menu' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='17431163' name='delete_confirmation' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='23742817' name='empty_deleted_items_confirmation' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='61535683' name='new_folder' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='30791836' name='rename_dlg' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='32887983' name='find_dialog' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='17475399' name='new_item_dialog' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='22636847' name='new_item_diaolog (in My Templates folder)' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='60590285' name='Preview' inputs='' description='Axure.Document.RPPage' main='true'/>
+    <state id='33074810' name='Fields' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='18112899' name='main_menu' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='23561115' name='delete_confirmation' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='63292653' name='NF_context' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='6048057' name='TF_context' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='19965518' name='URL_context' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='42496437' name='PWD_context' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='48906009' name='Edit' inputs='changesMade=true
+changesMade=false' description='Axure.Document.RPPage' main='true'/>
+    <state id='66607344' name='main_menu' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='28583536' name='popup_menu' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='34419228' name='virtual_keyboard' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='41337601' name='save_dialog' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='60454592' name='Select template' inputs='' description='Axure.Document.RPPage' main='true'/>
+    <state id='61407752' name='Custom' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='63379561' name='main_menu' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='39725971' name='About' inputs='' description='Axure.Document.RPPage' main='true'/>
+    <state id='19701298' name='main_menu' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='9803039' name='popup_menu' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='32876269' name='Options' inputs='changesMade=true
+changesMade=false' description='Axure.Document.RPPage' main='true'/>
+    <state id='52751036' name='main_menu' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='38014313' name='popup_menu' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='63582688' name='save_dialog' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='17322790' name='Change password' inputs='current_pwd=pwd+&apos;foo&apos;
+current_pwd=pwd; new_pwd=&apos;new&apos;+pwd; confirm_pwd=new_pwd+&apos;foo&apos;
+current_pwd=pwd; new_pwd=&apos;new&apos;+pwd; confirm_pwd=new_pwd
+current_pwd=pwd; new_pwd=&apos;&apos;; confirm_pwd=new_pwd' description='Axure.Document.RPPage' main='true'/>
+    <state id='26597492' name='main_menu' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='9847817' name='wrong_pwd_dialog' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='59475690' name='empty_pwd_dialog' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='5452505' name='not_matched_pwds_dialog' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='38999745' name='Search results' inputs='' description='Axure.Document.RPPage' main='true'/>
+    <state id='38507045' name='main_menu' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='56573654' name='popup_menu' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='622761' name='delete_confirmation' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='51339711' name='rename_dialog' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='47012596' name='Deleted Items' inputs='' description='Axure.Document.RPPage' main='true'/>
+    <state id='21319498' name='main_menu' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='65847680' name='popup_menu' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='46873590' name='permanently_delete_item' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='12435494' name='empty_deleted_items' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='5779136' name='rename_dlg' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='52241078' name='find_dialog' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='33020419' name='restore_confirmation' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='57408296' name='Select Background' inputs='' description='Axure.Document.RPPage' main='true'/>
+    <state id='32441840' name='main_menu' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='35695699' name='popup_menu' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='51034272' name='Select Icon' inputs='' description='Axure.Document.RPPage' main='true'/>
+    <state id='66343596' name='main_menu' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='43106760' name='popup_menu' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='17880270' name='Add field' inputs='' description='Axure.Document.RPPage' main='true'/>
+    <state id='61065805' name='main_menu' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='48367351' name='popup_menu' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='47486057' name='virtual_keyboard' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <state id='24721334' name='save_dialog' inputs='' description='Axure.Document.RPPanelDiagram' main='false'/>
+    <transition id='65880360-19299281' name='First start' source='65880360' target='19299281'/>
+    <transition id='65880360-50714607' name='Start' source='65880360' target='50714607'/>
+    <transition id='19299281-46007650' name='menu' source='19299281' target='46007650'/>
+    <transition id='19299281-34594790' name='trackball' source='19299281' target='34594790' condition='set_pwd!=confirm_pwd'/>
+    <transition id='19299281-53255854' name='trackball' source='19299281' target='53255854' condition='set_pwd==confirm_pwd and set_pwd==&apos;&apos;'/>
+    <transition id='19299281-31138264' name='trackball' source='19299281' target='31138264' condition='set_pwd==confirm_pwd and set_pwd!=&apos;&apos;'/>
+    <transition id='19299281-65880360' name='back' source='19299281' target='65880360'/>
+    <transition id='46007650-19299281' name='back' source='46007650' target='19299281'/>
+    <transition id='657479-19299281' name='back' source='657479' target='19299281'/>
+    <transition id='53255854-19299281' name='back' source='53255854' target='19299281'/>
+    <transition id='34594790-19299281' name='back' source='34594790' target='19299281'/>
+    <transition id='46007650-657479' name='Save' source='46007650' target='657479' condition='set_pwd!=confirm_pwd'/>
+    <transition id='46007650-53255854' name='Save' source='46007650' target='53255854' condition='set_pwd==confirm_pwd and set_pwd==&apos;&apos;'/>
+    <transition id='46007650-31138264' name='Save' source='46007650' target='31138264' condition='set_pwd==confirm_pwd and set_pwd!=&apos;&apos;'/>
+    <transition id='657479-19299281' name='OK' source='657479' target='19299281'/>
+    <transition id='53255854-31138264' name='OK' source='53255854' target='31138264'/>
+    <transition id='53255854-19299281' name='No' source='53255854' target='19299281'/>
+    <transition id='34594790-19299281' name='OK' source='34594790' target='19299281'/>
+    <transition id='50714607-10789421' name='menu' source='50714607' target='10789421'/>
+    <transition id='10789421-50714607' name='back' source='10789421' target='50714607'/>
+    <transition id='22044110-50714607' name='back' source='22044110' target='50714607'/>
+    <transition id='50714607-65880360' name='back' source='50714607' target='65880360'/>
+    <transition id='50714607-31138264' name='trackball' source='50714607' target='31138264' condition='pwd==correct_pwd'/>
+    <transition id='50714607-22044110' name='trackball' source='50714607' target='22044110' condition='pwd!=correct_pwd'/>
+    <transition id='50714607-31138264' name='Login' source='50714607' target='31138264' condition='pwd==correct_pwd'/>
+    <transition id='50714607-22044110' name='Login' source='50714607' target='22044110' condition='pwd!=correct_pwd'/>
+    <transition id='10789421-39725971' name='About' source='10789421' target='39725971'/>
+    <transition id='10789421-31138264' name='Login' source='10789421' target='31138264' condition='pwd==correct_pwd'/>
+    <transition id='10789421-22044110' name='Login' source='10789421' target='22044110' condition='pwd!=correct_pwd'/>
+    <transition id='22044110-50714607' name='OK' source='22044110' target='50714607'/>
+    <transition id='31138264-31138264' name='folder - press' source='31138264' target='31138264'/>
+    <transition id='31138264-59022586' name='folder - long_press' source='31138264' target='59022586'/>
+    <transition id='31138264-47012596' name='deleted_items' source='31138264' target='47012596'/>
+    <transition id='31138264-60590285' name='card - press' source='31138264' target='60590285'/>
+    <transition id='31138264-59022586' name='card - long_press' source='31138264' target='59022586'/>
+    <transition id='31138264-17475399' name='New - NOT in my templates' source='31138264' target='17475399'/>
+    <transition id='31138264-22636847' name='New - in My templates' source='31138264' target='22636847'/>
+    <transition id='31138264-32887983' name='Find' source='31138264' target='32887983'/>
+    <transition id='31138264-17431163' name='delete - deleted items not selected' source='31138264' target='17431163'/>
+    <transition id='31138264-23742817' name='delete - deleted items selected' source='31138264' target='23742817'/>
+    <transition id='31138264-58396974' name='menu' source='31138264' target='58396974'/>
+    <transition id='31138264-60590285' name='trackball - press' source='31138264' target='60590285'/>
+    <transition id='31138264-59022586' name='trackball - long press' source='31138264' target='59022586'/>
+    <transition id='58396974-31138264' name='back' source='58396974' target='31138264'/>
+    <transition id='59022586-31138264' name='back' source='59022586' target='31138264'/>
+    <transition id='17431163-31138264' name='back' source='17431163' target='31138264'/>
+    <transition id='23742817-31138264' name='back' source='23742817' target='31138264'/>
+    <transition id='61535683-31138264' name='back' source='61535683' target='31138264'/>
+    <transition id='30791836-31138264' name='back' source='30791836' target='31138264'/>
+    <transition id='32887983-31138264' name='back' source='32887983' target='31138264'/>
+    <transition id='17475399-31138264' name='back' source='17475399' target='31138264'/>
+    <transition id='22636847-31138264' name='back' source='22636847' target='31138264'/>
+    <transition id='31138264-65880360' name='back' source='31138264' target='65880360'/>
+    <transition id='58396974-65880360' name='Close' source='58396974' target='65880360'/>
+    <transition id='58396974-39725971' name='About' source='58396974' target='39725971'/>
+    <transition id='58396974-60590285' name='Open' source='58396974' target='60590285'/>
+    <transition id='58396974-17475399' name='New - NOT in My Templates' source='58396974' target='17475399'/>
+    <transition id='58396974-22636847' name='New - in My Templates' source='58396974' target='22636847'/>
+    <transition id='58396974-30791836' name='Rename' source='58396974' target='30791836'/>
+    <transition id='58396974-17431163' name='Delete - deleted items not selected' source='58396974' target='17431163'/>
+    <transition id='58396974-23742817' name='Delete - deleted items selected' source='58396974' target='23742817'/>
+    <transition id='58396974-23742817' name='empty_command' source='58396974' target='23742817'/>
+    <transition id='58396974-32876269' name='Options' source='58396974' target='32876269'/>
+    <transition id='58396974-17322790' name='change_password_command' source='58396974' target='17322790'/>
+    <transition id='58396974-31138264' name='Copy' source='58396974' target='31138264'/>
+    <transition id='58396974-31138264' name='Paste' source='58396974' target='31138264'/>
+    <transition id='58396974-32887983' name='Find' source='58396974' target='32887983'/>
+    <transition id='59022586-58396974' name='menu_sw_button' source='59022586' target='58396974'/>
+    <transition id='59022586-60590285' name='Open' source='59022586' target='60590285'/>
+    <transition id='59022586-30791836' name='Rename' source='59022586' target='30791836'/>
+    <transition id='17431163-31138264' name='No' source='17431163' target='31138264'/>
+    <transition id='17431163-31138264' name='Yes' source='17431163' target='31138264'/>
+    <transition id='23742817-31138264' name='No' source='23742817' target='31138264'/>
+    <transition id='23742817-31138264' name='Yes' source='23742817' target='31138264'/>
+    <transition id='61535683-31138264' name='OK' source='61535683' target='31138264'/>
+    <transition id='61535683-31138264' name='Cancel' source='61535683' target='31138264'/>
+    <transition id='30791836-31138264' name='OK' source='30791836' target='31138264'/>
+    <transition id='30791836-31138264' name='Cancel' source='30791836' target='31138264'/>
+    <transition id='32887983-38999745' name='OK' source='32887983' target='38999745'/>
+    <transition id='32887983-31138264' name='Cancel' source='32887983' target='31138264'/>
+    <transition id='17475399-60454592' name='Card' source='17475399' target='60454592'/>
+    <transition id='17475399-61535683' name='Folder' source='17475399' target='61535683'/>
+    <transition id='17475399-48906009' name='Template' source='17475399' target='48906009'/>
+    <transition id='22636847-48906009' name='Template' source='22636847' target='48906009'/>
+    <transition id='60590285-18112899' name='menu' source='60590285' target='18112899'/>
+    <transition id='60590285-63292653' name='trackball' source='60590285' target='63292653'/>
+    <transition id='60590285-60590285' name='trackball' source='60590285' target='60590285'/>
+    <transition id='18112899-60590285' name='back' source='18112899' target='60590285'/>
+    <transition id='23561115-60590285' name='back' source='23561115' target='60590285'/>
+    <transition id='63292653-60590285' name='back' source='63292653' target='60590285'/>
+    <transition id='6048057-60590285' name='back' source='6048057' target='60590285'/>
+    <transition id='19965518-60590285' name='back' source='19965518' target='60590285'/>
+    <transition id='42496437-60590285' name='back' source='42496437' target='60590285'/>
+    <transition id='60590285-60590285' name='back' source='60590285' target='60590285'/>
+    <transition id='60590285-31138264' name='back' source='60590285' target='31138264'/>
+    <transition id='60590285-23561115' name='delete - deleted items not selected' source='60590285' target='23561115'/>
+    <transition id='60590285-60590285' name='S_H pwds' source='60590285' target='60590285'/>
+    <transition id='60590285-48906009' name='A|cd' source='60590285' target='48906009'/>
+    <transition id='60590285-33074810' name='Fields' source='60590285' target='33074810'/>
+    <transition id='60590285-60590285' name='Preview' source='60590285' target='60590285'/>
+    <transition id='60590285-63292653' name='number_field' source='60590285' target='63292653'/>
+    <transition id='60590285-6048057' name='email_field' source='60590285' target='6048057'/>
+    <transition id='60590285-19965518' name='url_field' source='60590285' target='19965518'/>
+    <transition id='60590285-6048057' name='text_field' source='60590285' target='6048057'/>
+    <transition id='60590285-42496437' name='text_field' source='60590285' target='42496437'/>
+    <transition id='33074810-60590285' name='Preview' source='33074810' target='60590285'/>
+    <transition id='33074810-60590285' name='Fields' source='33074810' target='60590285'/>
+    <transition id='33074810-6048057' name='note_field' source='33074810' target='6048057'/>
+    <transition id='33074810-6048057' name='Card name' source='33074810' target='6048057'/>
+    <transition id='33074810-63292653' name='number_field' source='33074810' target='63292653'/>
+    <transition id='33074810-6048057' name='email_field' source='33074810' target='6048057'/>
+    <transition id='33074810-19965518' name='url_field' source='33074810' target='19965518'/>
+    <transition id='33074810-6048057' name='text_field' source='33074810' target='6048057'/>
+    <transition id='33074810-42496437' name='text_field' source='33074810' target='42496437'/>
+    <transition id='33074810-51034272' name='' source='33074810' target='51034272'/>
+    <transition id='18112899-65880360' name='Close' source='18112899' target='65880360'/>
+    <transition id='18112899-39725971' name='About' source='18112899' target='39725971'/>
+    <transition id='18112899-48906009' name='Edit' source='18112899' target='48906009'/>
+    <transition id='18112899-57408296' name='new_command' source='18112899' target='57408296'/>
+    <transition id='18112899-51034272' name='new_command' source='18112899' target='51034272'/>
+    <transition id='18112899-60590285' name='Send' source='18112899' target='60590285'/>
+    <transition id='18112899-23561115' name='Delete - deleted items not selected' source='18112899' target='23561115'/>
+    <transition id='18112899-33074810' name='Fields' source='18112899' target='33074810'/>
+    <transition id='18112899-18112899' name='empty_command' source='18112899' target='18112899'/>
+    <transition id='18112899-17322790' name='change_password_command' source='18112899' target='17322790'/>
+    <transition id='18112899-32876269' name='Options' source='18112899' target='32876269'/>
+    <transition id='18112899-60590285' name='Copy text' source='18112899' target='60590285'/>
+    <transition id='18112899-60590285' name='Open URL' source='18112899' target='60590285'/>
+    <transition id='18112899-60590285' name='Call' source='18112899' target='60590285'/>
+    <transition id='18112899-60590285' name='Create message' source='18112899' target='60590285'/>
+    <transition id='23561115-60590285' name='No' source='23561115' target='60590285'/>
+    <transition id='23561115-31138264' name='Yes' source='23561115' target='31138264'/>
+    <transition id='63292653-60590285' name='Copy text' source='63292653' target='60590285'/>
+    <transition id='63292653-60590285' name='Create message' source='63292653' target='60590285'/>
+    <transition id='63292653-60590285' name='Call' source='63292653' target='60590285'/>
+    <transition id='63292653-18112899' name='menu' source='63292653' target='18112899'/>
+    <transition id='63292653-48906009' name='A|cd' source='63292653' target='48906009'/>
+    <transition id='6048057-18112899' name='menu_sw_button' source='6048057' target='18112899'/>
+    <transition id='6048057-60590285' name='Copy text' source='6048057' target='60590285'/>
+    <transition id='6048057-48906009' name='A|cd' source='6048057' target='48906009'/>
+    <transition id='19965518-60590285' name='Open URL' source='19965518' target='60590285'/>
+    <transition id='19965518-60590285' name='Copy text' source='19965518' target='60590285'/>
+    <transition id='19965518-18112899' name='menu' source='19965518' target='18112899'/>
+    <transition id='19965518-48906009' name='A|cd' source='19965518' target='48906009'/>
+    <transition id='42496437-18112899' name='menu_sw_button' source='42496437' target='18112899'/>
+    <transition id='42496437-60590285' name='Copy text' source='42496437' target='60590285'/>
+    <transition id='42496437-48906009' name='A|cd' source='42496437' target='48906009'/>
+    <transition id='48906009-34419228' name='KB_button' source='48906009' target='34419228'/>
+    <transition id='48906009-66607344' name='menu' source='48906009' target='66607344'/>
+    <transition id='48906009-28583536' name='trackball' source='48906009' target='28583536'/>
+    <transition id='48906009-60590285' name='back - not changesMade' source='48906009' target='60590285'/>
+    <transition id='48906009-41337601' name='back - changesMade' source='48906009' target='41337601'/>
+    <transition id='66607344-48906009' name='back - Any_Dialog_Opened' source='66607344' target='48906009'/>
+    <transition id='28583536-48906009' name='back - Any_Dialog_Opened' source='28583536' target='48906009'/>
+    <transition id='34419228-48906009' name='back - Any_Dialog_Opened' source='34419228' target='48906009'/>
+    <transition id='41337601-48906009' name='back - Any_Dialog_Opened' source='41337601' target='48906009'/>
+    <transition id='48906009-28583536' name='Google card' source='48906009' target='28583536'/>
+    <transition id='66607344-60590285' name='Save' source='66607344' target='60590285'/>
+    <transition id='66607344-39725971' name='About' source='66607344' target='39725971'/>
+    <transition id='66607344-17322790' name='change_password_command' source='66607344' target='17322790'/>
+    <transition id='66607344-32876269' name='Options' source='66607344' target='32876269'/>
+    <transition id='66607344-17880270' name='Add field' source='66607344' target='17880270'/>
+    <transition id='28583536-66607344' name='menu_sw_button' source='28583536' target='66607344'/>
+    <transition id='28583536-17880270' name='Add field' source='28583536' target='17880270'/>
+    <transition id='28583536-60590285' name='Save' source='28583536' target='60590285'/>
+    <transition id='41337601-60590285' name='Save' source='41337601' target='60590285'/>
+    <transition id='41337601-60590285' name='Discard' source='41337601' target='60590285'/>
+    <transition id='41337601-48906009' name='Cancel' source='41337601' target='48906009'/>
+    <transition id='60454592-63379561' name='menu' source='60454592' target='63379561'/>
+    <transition id='60454592-48906009' name='trackball' source='60454592' target='48906009'/>
+    <transition id='63379561-60454592' name='back' source='63379561' target='60454592'/>
+    <transition id='60454592-31138264' name='back - back (Else If True)' source='60454592' target='31138264'/>
+    <transition id='60454592-61407752' name='Fields' source='60454592' target='61407752'/>
+    <transition id='60454592-60454592' name='Standard' source='60454592' target='60454592'/>
+    <transition id='61407752-60454592' name='Standard' source='61407752' target='60454592'/>
+    <transition id='61407752-60454592' name='Custom' source='61407752' target='60454592'/>
+    <transition id='63379561-48906009' name='Select' source='63379561' target='48906009'/>
+    <transition id='63379561-39725971' name='About' source='63379561' target='39725971'/>
+    <transition id='63379561-17322790' name='change_password_command' source='63379561' target='17322790'/>
+    <transition id='63379561-32876269' name='Options' source='63379561' target='32876269'/>
+    <transition id='39725971-19701298' name='menu' source='39725971' target='19701298'/>
+    <transition id='39725971-9803039' name='trackball' source='39725971' target='9803039'/>
+    <transition id='19701298-39725971' name='back' source='19701298' target='39725971'/>
+    <transition id='9803039-39725971' name='back' source='9803039' target='39725971'/>
+    <transition id='39725971-39725971' name='back' source='39725971' target='39725971'/>
+    <transition id='19701298-39725971' name='About' source='19701298' target='39725971'/>
+    <transition id='19701298-17322790' name='change_password_command' source='19701298' target='17322790'/>
+    <transition id='19701298-39725971' name='Web' source='19701298' target='39725971'/>
+    <transition id='19701298-32876269' name='Options' source='19701298' target='32876269'/>
+    <transition id='9803039-19701298' name='menu_sw_button' source='9803039' target='19701298'/>
+    <transition id='9803039-39725971' name='Web' source='9803039' target='39725971'/>
+    <transition id='32876269-52751036' name='menu' source='32876269' target='52751036'/>
+    <transition id='32876269-38014313' name='trackball' source='32876269' target='38014313'/>
+    <transition id='32876269-63582688' name='back' source='32876269' target='63582688' condition='changesMade'/>
+    <transition id='32876269-31138264' name='back' source='32876269' target='31138264' condition='not changesMade'/>
+    <transition id='52751036-32876269' name='Save' source='52751036' target='32876269'/>
+    <transition id='52751036-39725971' name='About' source='52751036' target='39725971'/>
+    <transition id='52751036-17322790' name='change_password_command' source='52751036' target='17322790'/>
+    <transition id='52751036-32876269' name='Options' source='52751036' target='32876269'/>
+    <transition id='38014313-52751036' name='menu_sw_button' source='38014313' target='52751036'/>
+    <transition id='38014313-32876269' name='Save' source='38014313' target='32876269'/>
+    <transition id='63582688-31138264' name='Save' source='63582688' target='31138264'/>
+    <transition id='63582688-31138264' name='Discard' source='63582688' target='31138264'/>
+    <transition id='63582688-32876269' name='Cancel' source='63582688' target='32876269'/>
+    <transition id='17322790-26597492' name='menu' source='17322790' target='26597492'/>
+    <transition id='17322790-9847817' name='trackball' source='17322790' target='9847817' condition='current_pwd!=pwd'/>
+    <transition id='17322790-5452505' name='trackball' source='17322790' target='5452505' condition='current_pwd==pwd and new_pwd!=confirm_pwd'/>
+    <transition id='17322790-59475690' name='trackball' source='17322790' target='59475690' condition='current_pwd==pwd and new_pwd==confirm_pwd and new_pwd==&apos;&apos;'/>
+    <transition id='17322790-31138264' name='trackball' source='17322790' target='31138264' condition='current_pwd==pwd and new_pwd==confirm_pwd and new_pwd!=&apos;&apos;'/>
+    <transition id='17322790-17322790' name='back' source='17322790' target='17322790'/>
+    <transition id='26597492-9847817' name='Save' source='26597492' target='9847817' condition='current_pwd!=pwd'/>
+    <transition id='26597492-5452505' name='Save' source='26597492' target='5452505' condition='current_pwd==pwd and new_pwd!=confirm_pwd'/>
+    <transition id='26597492-17322790' name='Save' source='26597492' target='17322790' condition='current_pwd==pwd and confirm_pwd==new_pwd and new_pwd!=&apos;&apos;'/>
+    <transition id='26597492-17322790' name='Save' source='26597492' target='17322790' condition='current_pwd==pwd and confirm_pwd==new_pwd and new_pwd==&apos;&apos;'/>
+    <transition id='26597492-39725971' name='About' source='26597492' target='39725971'/>
+    <transition id='26597492-32876269' name='Options' source='26597492' target='32876269'/>
+    <transition id='9847817-17322790' name='OK' source='9847817' target='17322790'/>
+    <transition id='59475690-17322790' name='OK' source='59475690' target='17322790'/>
+    <transition id='59475690-17322790' name='No' source='59475690' target='17322790'/>
+    <transition id='5452505-17322790' name='OK' source='5452505' target='17322790'/>
+    <transition id='38999745-60590285' name='Google Card - press' source='38999745' target='60590285'/>
+    <transition id='38999745-56573654' name='Google Card - long_press' source='38999745' target='56573654'/>
+    <transition id='38999745-38507045' name='menu' source='38999745' target='38507045'/>
+    <transition id='38999745-60590285' name='trackball - press' source='38999745' target='60590285'/>
+    <transition id='38999745-56573654' name='trackball - long press' source='38999745' target='56573654'/>
+    <transition id='38507045-38999745' name='back' source='38507045' target='38999745'/>
+    <transition id='56573654-38999745' name='back' source='56573654' target='38999745'/>
+    <transition id='622761-38999745' name='back' source='622761' target='38999745'/>
+    <transition id='51339711-38999745' name='back' source='51339711' target='38999745'/>
+    <transition id='38999745-31138264' name='back' source='38999745' target='31138264'/>
+    <transition id='38999745-31138264' name='Locate' source='38999745' target='31138264'/>
+    <transition id='38999745-622761' name='delete - deleted items not selected' source='38999745' target='622761'/>
+    <transition id='38507045-65880360' name='Close' source='38507045' target='65880360'/>
+    <transition id='38507045-39725971' name='About' source='38507045' target='39725971'/>
+    <transition id='38507045-60590285' name='Open' source='38507045' target='60590285'/>
+    <transition id='38507045-51339711' name='Rename' source='38507045' target='51339711'/>
+    <transition id='38507045-17322790' name='change_password_command' source='38507045' target='17322790'/>
+    <transition id='38507045-32876269' name='Options' source='38507045' target='32876269'/>
+    <transition id='38507045-622761' name='Delete - deleted items not selected' source='38507045' target='622761'/>
+    <transition id='38507045-38999745' name='Copy' source='38507045' target='38999745'/>
+    <transition id='38507045-31138264' name='Locate' source='38507045' target='31138264'/>
+    <transition id='56573654-38507045' name='menu_sw_button' source='56573654' target='38507045'/>
+    <transition id='56573654-60590285' name='Open' source='56573654' target='60590285'/>
+    <transition id='56573654-31138264' name='Locate' source='56573654' target='31138264'/>
+    <transition id='622761-38999745' name='No' source='622761' target='38999745'/>
+    <transition id='622761-38999745' name='Yes' source='622761' target='38999745'/>
+    <transition id='51339711-38999745' name='OK' source='51339711' target='38999745'/>
+    <transition id='51339711-38999745' name='Cancel' source='51339711' target='38999745'/>
+    <transition id='47012596-60590285' name='Deleted item 1 - press' source='47012596' target='60590285'/>
+    <transition id='47012596-65847680' name='Deleted item 1 - long press' source='47012596' target='65847680'/>
+    <transition id='47012596-33020419' name='Restore' source='47012596' target='33020419'/>
+    <transition id='47012596-52241078' name='Find' source='47012596' target='52241078'/>
+    <transition id='47012596-46873590' name='delete - deleted items selected' source='47012596' target='46873590'/>
+    <transition id='47012596-21319498' name='menu' source='47012596' target='21319498'/>
+    <transition id='47012596-60590285' name='trackball - press' source='47012596' target='60590285'/>
+    <transition id='47012596-65847680' name='trackball - long press' source='47012596' target='65847680'/>
+    <transition id='21319498-47012596' name='back' source='21319498' target='47012596'/>
+    <transition id='65847680-47012596' name='back' source='65847680' target='47012596'/>
+    <transition id='46873590-47012596' name='back' source='46873590' target='47012596'/>
+    <transition id='12435494-47012596' name='back' source='12435494' target='47012596'/>
+    <transition id='5779136-47012596' name='back' source='5779136' target='47012596'/>
+    <transition id='52241078-47012596' name='back' source='52241078' target='47012596'/>
+    <transition id='33020419-47012596' name='back' source='33020419' target='47012596'/>
+    <transition id='47012596-31138264' name='back' source='47012596' target='31138264'/>
+    <transition id='21319498-65880360' name='Close' source='21319498' target='65880360'/>
+    <transition id='21319498-39725971' name='About' source='21319498' target='39725971'/>
+    <transition id='21319498-60590285' name='Open' source='21319498' target='60590285'/>
+    <transition id='21319498-5779136' name='Rename' source='21319498' target='5779136'/>
+    <transition id='21319498-46873590' name='Delete - deleted items selected' source='21319498' target='46873590'/>
+    <transition id='21319498-12435494' name='empty_command' source='21319498' target='12435494'/>
+    <transition id='21319498-32876269' name='Options' source='21319498' target='32876269'/>
+    <transition id='21319498-17322790' name='change_password_command' source='21319498' target='17322790'/>
+    <transition id='21319498-47012596' name='Copy' source='21319498' target='47012596'/>
+    <transition id='21319498-47012596' name='Paste' source='21319498' target='47012596'/>
+    <transition id='21319498-52241078' name='Find' source='21319498' target='52241078'/>
+    <transition id='65847680-21319498' name='menu_sw_button' source='65847680' target='21319498'/>
+    <transition id='65847680-60590285' name='Open' source='65847680' target='60590285'/>
+    <transition id='65847680-33020419' name='Restore' source='65847680' target='33020419'/>
+    <transition id='46873590-47012596' name='No' source='46873590' target='47012596'/>
+    <transition id='46873590-47012596' name='Yes' source='46873590' target='47012596'/>
+    <transition id='12435494-47012596' name='No' source='12435494' target='47012596'/>
+    <transition id='12435494-47012596' name='Yes' source='12435494' target='47012596'/>
+    <transition id='5779136-47012596' name='OK' source='5779136' target='47012596'/>
+    <transition id='5779136-47012596' name='Cancel' source='5779136' target='47012596'/>
+    <transition id='52241078-38999745' name='OK' source='52241078' target='38999745'/>
+    <transition id='52241078-47012596' name='Cancel' source='52241078' target='47012596'/>
+    <transition id='57408296-32441840' name='menu' source='57408296' target='32441840'/>
+    <transition id='57408296-35695699' name='trackball' source='57408296' target='35695699'/>
+    <transition id='32441840-57408296' name='back' source='32441840' target='57408296'/>
+    <transition id='35695699-57408296' name='back' source='35695699' target='57408296'/>
+    <transition id='57408296-60590285' name='back - Changes made (Else If visibility of panel Menus&amp;Dialogs equals false)' source='57408296' target='60590285'/>
+    <transition id='32441840-60590285' name='Save' source='32441840' target='60590285'/>
+    <transition id='32441840-39725971' name='About' source='32441840' target='39725971'/>
+    <transition id='32441840-17322790' name='change_password_command' source='32441840' target='17322790'/>
+    <transition id='32441840-32876269' name='Options' source='32441840' target='32876269'/>
+    <transition id='35695699-32441840' name='menu_sw_button' source='35695699' target='32441840'/>
+    <transition id='35695699-60590285' name='Save' source='35695699' target='60590285'/>
+    <transition id='51034272-66343596' name='menu' source='51034272' target='66343596'/>
+    <transition id='51034272-43106760' name='trackball' source='51034272' target='43106760'/>
+    <transition id='66343596-51034272' name='back' source='66343596' target='51034272'/>
+    <transition id='43106760-51034272' name='back' source='43106760' target='51034272'/>
+    <transition id='51034272-60590285' name='back - Changes made (Else If visibility of panel Menus&amp;Dialogs equals false)' source='51034272' target='60590285'/>
+    <transition id='66343596-60590285' name='Save' source='66343596' target='60590285'/>
+    <transition id='66343596-39725971' name='About' source='66343596' target='39725971'/>
+    <transition id='66343596-17322790' name='change_password_command' source='66343596' target='17322790'/>
+    <transition id='66343596-32876269' name='Options' source='66343596' target='32876269'/>
+    <transition id='43106760-66343596' name='menu_sw_button' source='43106760' target='66343596'/>
+    <transition id='43106760-60590285' name='Save' source='43106760' target='60590285'/>
+    <transition id='17880270-47486057' name='KB_button' source='17880270' target='47486057'/>
+    <transition id='17880270-61065805' name='menu' source='17880270' target='61065805'/>
+    <transition id='17880270-48367351' name='trackball' source='17880270' target='48367351'/>
+    <transition id='17880270-24721334' name='back - changesMade' source='17880270' target='24721334'/>
+    <transition id='17880270-48906009' name='back - not changesMade' source='17880270' target='48906009'/>
+    <transition id='61065805-17880270' name='back - some dialog active' source='61065805' target='17880270'/>
+    <transition id='48367351-17880270' name='back - some dialog active' source='48367351' target='17880270'/>
+    <transition id='47486057-17880270' name='back - some dialog active' source='47486057' target='17880270'/>
+    <transition id='24721334-17880270' name='back - some dialog active' source='24721334' target='17880270'/>
+    <transition id='17880270-48367351' name='enterred name' source='17880270' target='48367351'/>
+    <transition id='61065805-48906009' name='Save' source='61065805' target='48906009'/>
+    <transition id='61065805-39725971' name='About' source='61065805' target='39725971'/>
+    <transition id='61065805-17322790' name='change_password_command' source='61065805' target='17322790'/>
+    <transition id='61065805-32876269' name='Options' source='61065805' target='32876269'/>
+    <transition id='48367351-61065805' name='menu_sw_button' source='48367351' target='61065805'/>
+    <transition id='48367351-17880270' name='' source='48367351' target='17880270'/>
+    <transition id='48367351-48906009' name='Save' source='48367351' target='48906009'/>
+    <transition id='24721334-48906009' name='Save' source='24721334' target='48906009'/>
+    <transition id='24721334-48906009' name='Discard' source='24721334' target='48906009'/>
+    <transition id='24721334-17880270' name='Cancel' source='24721334' target='17880270'/>
+</fsm>
