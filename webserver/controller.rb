@@ -23,7 +23,7 @@ end
 
                     
 PORT=8000
-RESIZE_FACTOR=0.35
+RESIZE_FACTOR=0.5
 LOG='../log'
 TESTS='../tests'
 XML_MODEL='../model'
@@ -35,7 +35,7 @@ TMP='../tmp'
 Sinatra.register Padrino::Helpers
 configure do
 	set :sessions, true
-	set :environment, :production
+	set :environment, :development
 	set :port, PORT
 	set :server, %w[webrick]
 	use Rack::Flash
@@ -166,7 +166,7 @@ end
 		if RUBY_PLATFORM==WIN
 			session[:generator_process]=Process.create({:command_line=>command_line}).process_id
 		else		
-			session[:generator_process]=spawn(command_line)			
+			session[:generator_process]=myspawn(command_line)			
 		end
 		sleep(3) # waiting for generator to open LOG file
 		$gen_log=File.open(LOG+'/'+session[:client_id]+'.log')
@@ -230,7 +230,7 @@ end
 		end
 	end
 	
-	def spawn(command_line)
+	def myspawn(command_line)
 		job = fork do
 	  	exec command_line
 		end

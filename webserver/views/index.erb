@@ -3,13 +3,16 @@
 	<p class="block_h">Model</p>
 		<%form_tag '/new_file', :enctype=>"multipart/form-data", :method=>"post" do%>
 			<%field_set_tag do%>
-				<table style="margin-left: 15px">	
+				<!--<table style="margin-left: 15px">	
 					<tr>
 					<td><%=label_tag 'Model location'%></td>
-					<td><%=file_field_tag 'model_location'%></td>
+					<td width="10%"><%=file_field_tag 'model_location'%></td>
 					<td><%=submit_tag "Load"%></td>
 					</tr>
-				</table>
+				</table>-->
+				<label><%=label_tag 'Model location'%></label> 
+				<%=file_field_tag 'model_location', :size=>"3"%>	
+				<%=submit_tag "Load"%>	
 	   	<%end%>    
 	   	
 		<%end%>
@@ -26,7 +29,7 @@
 			</tr>	
 		  <tr>
 				<td><%=label_tag 'Start node'%>	</td>
-				<td><%=text_field_tag 'start_node', :class=>'gen_param',:value=>'Start'%></td>
+				<td><%=text_field_tag 'start_node', :class=>'gen_param',:value=>'Start', :size=>3%></td>
 		  </tr>
 			<tr>
 		  	<td><%=label_tag 'Enable Visualization'%></td>

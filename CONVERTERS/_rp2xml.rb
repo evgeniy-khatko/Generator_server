@@ -1,6 +1,6 @@
 require "rexml/document"
 include REXML
-require 'Logger'
+require 'logger'
 require 'bin/Axure.Document'
 require 'bin/types.voc.rb'
 require 'bin/regexp.voc.rb'
@@ -53,7 +53,7 @@ end
 
 class Page < RP
 	attr_accessor :buttons, :inputs, :main
-	def initialize(id,parent_id,type,name,inputs='',main)
+	def initialize(id,parent_id,type,name,main,inputs='')
 		super(id,parent_id,type,name)
 		@buttons=[]
 		@inputs=inputs
@@ -224,7 +224,7 @@ def get_buttons(widgets,wid_container)
 		elsif w.GetType.to_s==DP
 			da=DynamicArea.new(w.GetHashCode,wid_container.id,w.GetType.to_s,w.Name,w.IsVisible)	
 			w.PanelStates.ToArray.each{|ps|
-				da_page=Page.new(ps.GetHashCode,da.id,ps.GetType.to_s,ps.DiagramName,false) 
+				da_page=Page.new(ps.GetHashCode,da.id,ps.GetType.to_s,false,ps.DiagramName) 
 				da.add_page(da_page)	
 				get_buttons(ps.Widgets.ToArray,da_page)
 			}
@@ -237,7 +237,7 @@ def load_model
 	# Prepare info for future use
 	$log.info 'Load model'
 	pages(@doc).each do |page| 
-		p=Page.new(page.GetHashCode,nil,page.GetType.to_s,page.PackageName,true)	
+		p=Page.new(page.GetHashCode,nil,page.GetType.to_s,true,page.PackageName)	
 		# get inputs from RPPage
 		page.NotesAnnotation.PropertyNames.each{|propName|
 			val=page.NotesAnnotation.GetPropertyValue(propName)

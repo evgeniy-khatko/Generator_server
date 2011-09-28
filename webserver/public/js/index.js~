@@ -5,7 +5,6 @@
 
 var dataUpdater
 var optype
-var lazyInt=5000
 
 $(document).ready(function(){setConsoleHeight();prepareData()})
 
@@ -21,11 +20,8 @@ function startGenerator(){
     			$('#stop').attr('disabled',false);
     			$('.gen_param').attr('disabled',true);
     			if ($('#enable_visualization').attr('checked')=='checked'){
-	    			updateData($('#delay').val())
+	    			updateData()
 	    		}	    			    		
-					else{
-						checkProcess(lazyInt)
-					}
     		}
     	})
   
@@ -47,31 +43,9 @@ function stopGenerator(){
     	})
 }
 
-function checkProcess(timeout){
-	var st,imageData
-	$.ajax({
-		url: '/get_progress',
-		type: 'GET',
-		success: function(data){
-			$.each(data,function(i,val){
-				if(i=='status'){st=val}
-				if(i=='svg_data'){imageData=val}
-			});
-			if(st=='1'){ // running
-				updateImage(imageData);
-				dataUpdater=setTimeout(function(){checkProcess(timeout)},timeout);
-			}
-			if(st=='0'){ // done
-				updateImage(imageData);
-				clearTimeout(dataUpdater);
-				releaseFields();
-				sendTestsFile();
-			}
-		},
-	})
-}
 
-function updateData(timeout){
+
+function updateData(){
 	var st,console_data,svg_data
 	$.ajax({
     		url: '/update_data',
@@ -85,39 +59,42 @@ function updateData(timeout){
 					if(st=='1'){  // running 
 						updateImage(svg_data);
 						updateConsoleText(console_data);
-						dataUpdater=setTimeout(function(){updateData(timeout)},timeout);
+						dataUpdater=setTimeout('updateData()',$('#delay').val());
 					} 
 					else if(st=='0'){ // done
-						updateConsoleText(console_data);
 						clearTimeout(dataUpdater);
-						sendTestsFile();
 						releaseFields();
+						updateConsoleText(console_data);
+						sendTestsFile();
 					}
 					else if(st=='-1'){ // unknown error
 						updateImage(svg_data);
-						updateConsoleText(console_data);
 						stopGenerator();
+						updateConsoleText(console_data);
 					}
 					else if(st=='2'){ // generator is not running due to internal error or stop signal
-						updateConsoleText(console_data);
 						clearTimeout(dataUpdater);
 						releaseFields();
+						updateConsoleText(console_text);
 					}
+
     	}
+    		   		
+    	
 	})
 }
 
 
 function prepareData(){	
 	// current graphviz image resolution is 96 dpi ~ 100 dpi, and the size of 'visualization' div is 70% x 90% of the window.size
-	calculated_size=(Math.round($(window).width()*0.07)/5+','+Math.round($(window).height()*0.09)/5)
+	calculated_size=(Math.round($(window).width()*0.07)/10+','+Math.round($(window).height()*0.09)/10)
 	$.ajax({
     		url: '/prepare_data',
     		type: 'GET',
     		dataType: 'json',
     		
     		data: {operation_type: optype, size: calculated_size, filter: $('#filter').val()},
-    		success: function(data){$.each(data,function(i,val){if(i=='svg_data' && val!=''){updateImage(val)}})}
+    		success: function(data){$.each(data,function(i,val){if(i=='svg_data'){updateImage(val)}})}
     	})	
 }
 

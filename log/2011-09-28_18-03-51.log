@@ -1,0 +1,24 @@
+INFO: Set global parameters
+load Model
+Decompose
+Decompose done
+run
+CURRENT STATE: 1
+F (a) = 101
+F (d) = 101
+CURRENT STATE: 2
+F (b) = 201
+CURRENT STATE: 4
+F (c) = 301
+CURRENT STATE: 1
+F (a) = 503
+F (d) = 401
+CURRENT STATE: 3
+F (e) = 501
+F (h) = 501
+CURRENT STATE: 5
+F (f) = 601
+CURRENT STATE: 3
+F (e) = 802
+F (h) = 701
+write tests

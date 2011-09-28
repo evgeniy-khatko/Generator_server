@@ -53,13 +53,14 @@
   position: absolute;
 	left: 0%;
 	top: 40px;
-	height: auto;
+	height: 50%;
 	width: 30%;
 	background-color: #E6E6E6;
 	border-style: solid;
 	border-width: 1px;
 	margin-left: 3px;
 	padding: 3px;
+	overflow: auto;
 }
 
 #console{
