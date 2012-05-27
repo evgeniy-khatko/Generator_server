@@ -8,6 +8,7 @@ module Helper
 	IMG="../webserver/public/img"
 	MODEL="../model"
 	TESTS="../tests"
+	STATS="../stats"
 	TAG="Helper"
 	GV_FILE=File.new("#{TMP}/model.gv","w")
 	GV_FILE.sync=true
@@ -70,29 +71,38 @@ module Helper
 		vis=par.index("-visualize")
 		$visualization=(vis==nil)? false : true
 
+		stats=par.index("-stats")
+		$stats=(stats==nil)? false : true
+
 		servermode=par.index("-servermode")
 		$servermode=(servermode==nil)? false : true
 		$port=par[servermode+1] if $servermode
 	end
 	
-	def setTestsuite(name=Testsuite::DEFAULT_TESTSUITE_NAME,default_check=Testsuite::DEFAULT_CHECK)
+	def setTestsuite(name=Testsuite::DEFAULT_TESTSUITE_NAME)
 		type=($type=='Directed')? $type.upcase+"(#{$keyword})" : $type.upcase
-		testsuite=Testsuite.new(Testsuite::DEFAULT_TESTSUITE_NAME+"_#{type}",Testsuite::DEFAULT_CHECK)
+		testsuite=Testsuite.new(Testsuite::DEFAULT_TESTSUITE_NAME+"_#{type}")
 		return testsuite
 	end
 	
 	def write_tests(testsuite)
 		i("write tests")
-		f=File.open(TESTS+'/'+'tests'+".#{$export}","wb+")
-		case $export
-			when 'txt' then f.puts testsuite.exportTxt.gsub("\n","\r\n")
-			when 'csv' then f.puts testsuite.exportCsv
-		end
+		f=File.open(TESTS+'/'+'tests.xml',"wb+")
+		f.puts testsuite.export
 		f.rewind
 		f.close
 		return f
 	end
 	
+	def write_stats(fsm,testsuite)
+		i("write stats")
+		f=File.open(STATS+'/'+'stats.log',"w+")
+		f.puts fsm.stats
+		f.puts testsuite.stats
+		f.rewind
+		f.close
+		return f
+	end
 
 	def getXmlFile(xmlFile)
 		if not File.exists?(xmlFile)

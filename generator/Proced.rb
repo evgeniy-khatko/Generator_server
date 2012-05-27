@@ -3,6 +3,7 @@ require "rexml/document"
 require "FSM.rb"
 require "Log.rb"
 require "Helper.rb"
+require "Alphabeth.rb"
 include REXML
 include Log
 include Helper
@@ -45,13 +46,14 @@ module Proced
 					condition=transition.attributes["condition"]
 					chance=transition.attributes["chance"]
 					internalState=transition.attributes["internalState"]					
-					if(id==nil or name==nil or source==nil or target==nil)
+					type=transition.attributes["type"]					
+					if(id==nil or name==nil or source==nil or target==nil or type==nil)
 						sou=(source==nil)? '' : source.name
 						tar=(target==nil)? '' : target.name
 						e("XML model has inconsistent transition(s)")
 						raise AppError.new("XML model has inconsistent transition: name=#{name}, id=#{id}, source=#{sou}, target=#{tar}")
 					end      					
-					model.new_transition(id,name,source,target,condition,action,chance,internalState)
+					model.new_transition(id,name,source,target,condition,action,chance,internalState,type)
 		}
 
 		# need to decompose FSM: to split all states with inputs into 2 - state and state_INPUTDONE		
@@ -70,7 +72,7 @@ module Proced
 				# connecting 2 splitted states with inputs:
 				inputs.split("\n").each{|input|
 					if input!=''
-						model.new_transition(state.id+'-'+state_done.id,TRANSITION_IN_DONE_NAME,state,state_done,nil,input,nil,nil)					
+						model.new_transition(state.id+'-'+state_done.id,TRANSITION_IN_DONE_NAME,state,state_done,nil,input,nil,nil,Alphabeth::ENTER)					
 						d "Added transition name=#{input}"
 					end
 				}

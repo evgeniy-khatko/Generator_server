@@ -1,24 +1,23 @@
 class Test
-		LINE="=============="
-		attr_accessor :name, :steps, :precondition, :check
+		attr_accessor :name, :steps, :precondition, :expected
 		def initialize(name)
 			@name=name
 			@steps=[]
 			@precondition=''
-			@check=''
+			@expected=''
+		end
+
+		class Step
+			attr_accessor :from, :to, :type
+
+			def initialize(from,to,type)
+				@from=from
+				@to=to
+				@type=type
+			end
 		end
 		
-		def new_step(step_desc)
-			@steps << step_desc
+		def new_step(from,to,type)
+			@steps << Step.new(from,to,type)
 		end
-		
-		def txt
-			prec=(@precondition=='')? '' : "Precondition\n#{LINE}\n#{@precondition}\n\n"
-			return "#{LINE}#{@name.upcase}#{LINE}\n\n"+prec+"Steps\n#{LINE}\n#{@steps.join("\n")}"+"\n\nCheck\n#{LINE}\n#{@check}\n"
-		end
-		
-		def csv
-			return "#{@name.upcase},#{@precondition},#{@steps.join(";")},#{@check}"
-		end
-		
 end

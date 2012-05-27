@@ -1,3 +1,4 @@
+require '../generator/Alphabeth.rb'
 require "rexml/document"
 include REXML
 
@@ -57,6 +58,12 @@ XPath.each(doc, "//edge"){|edge|
 	transition.attributes["internalState"]=internal_state.delete('{').delete('}').strip if not internal_state==nil
 	chance=@edge_label.scan(/\<.+\>/).first
 	transition.attributes["chance"]=chance.delete('<').delete('>').strip if not chance==nil
+	type=@edge_label.scan(/\\.+\\/).first
+	if not (type==nil or Alphabeth::TYPES.include?(type))
+		transition.attributes["type"]=type.delete('\\').delete('\\').strip 
+	else
+		transition.attributes["type"]=Alphabeth.default 
+	end
 	root.add_element(transition)
 	@edge_name,@edge_desc=nil,nil
 }

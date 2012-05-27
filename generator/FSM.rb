@@ -32,9 +32,9 @@ class FSM
 
 	class Transition
 		attr_reader :id, :name, :chance, :internal_state
-		attr_accessor :has_condition, :has_action, :weight, :has_internal_state, :source, :target, :condition, :action
+		attr_accessor :has_condition, :has_action, :weight, :has_internal_state, :source, :target, :condition, :action, :type
 
-		def initialize(id,name,source,target,condition,action,chance,internalState)
+		def initialize(id,name,source,target,condition,action,chance,internalState,type)
 			@id=id
 			@name=name
 			@source=source
@@ -47,6 +47,7 @@ class FSM
 			@weight=(chance==nil)? DEFAULT_WEIGHT : DEFAULT_WEIGHT/@chance
 			@internal_state=internalState
 			@has_internal_state=(internalState==nil)? false : true
+			@type=type
 		end
 		
 		def info
@@ -113,8 +114,8 @@ class FSM
 		return new_state
 	end
 	
-	def new_transition(id,name,source,target,condition,action,chance,internalState)
-		new_transition=Transition.new(id,name,source,target,condition,action,chance,internalState)
+	def new_transition(id,name,source,target,condition,action,chance,internalState,type)
+		new_transition=Transition.new(id,name,source,target,condition,action,chance,internalState,type)
 		@transitions << new_transition
 		return new_transition
 	end
@@ -212,4 +213,14 @@ class FSM
 		out+="}"
 		return out
   end	
+
+	def stats
+		out=''
+		out+="STATES: #{@states.length}\n"
+		out+="TRANSITIONS: #{@transitions.length}\n"
+		out+="PARAMETERS: #{@fsmContext.instance_variables.length}\n"
+		conditions=0
+		@transitions.each{|t| conditions+=1 if t.has_condition}
+		out+="CONDITIONS: #{conditions}\n"
+	end
 end

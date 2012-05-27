@@ -86,18 +86,19 @@ module Full
 			
 			# add tests
 			if (fsm.current_state.main and current_test.steps.length > AVERAGE_TEST_LENGTH) or current_transition.has_internal_state
-			  condition=(current_transition.has_condition)? " (#{current_transition.condition})" : ''
-				state=(fsm.current_state.name==fsm.start_state)? '' : " -> #{fsm.current_state.name}"
-				current_test.new_step(current_transition.name+condition+state)
-				current_test.check=(current_transition.has_internal_state)? current_transition.internal_state : fsm.current_state.name+"\t"+testsuite.default_check
+			  condition=(current_transition.has_condition)? current_transition.condition : ''
+				state=(fsm.current_state.name==fsm.start_state)? '' : fsm.current_state.name
+				current_test.new_step(current_transition.source,current_transition.target,current_transition.type)
+				current_test.expected=(current_transition.has_internal_state)? current_transition.internal_state : testsuite.expected_by_default
 				
 				testsuite.add_test(current_test)
 				current_test=Test.new(fsm.current_state.name)
 				current_test.precondition=fsm.current_state.name				
 			else
-				condition=(current_transition.has_condition)? " (#{current_transition.condition})" : ''
-				state=(fsm.current_state.name==fsm.start_state)? '' : " -> #{fsm.current_state.name}"
-				current_test.new_step(current_transition.name+condition+state)
+				condition=(current_transition.has_condition)? current_transition.condition : ''
+				state=(fsm.current_state.name==fsm.start_state)? '' : fsm.current_state.name
+				current_test.new_step(current_transition.source,current_transition.target,current_transition.type)
+				current_test.expected=(current_transition.has_internal_state)? current_transition.internal_state : testsuite.expected_by_default
 			end
 
 			#define coverage						

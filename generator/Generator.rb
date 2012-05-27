@@ -27,6 +27,7 @@ include Log
 
 		Log::setTag(Helper::TAG)
 		Helper::write_tests(testsuite)
+		Helper::write_stats(fsm,testsuite) if $stats
 		if $servermode
 			transition_area=$server.accept
 			transition_area.print '0'
