@@ -1,0 +1,6 @@
+source "http://rubygems.org"
+gem "sinatra"
+gem "sinatra-flash"
+gem "json_pure"
+gem "padrino-helpers"
+gem "mongrel"

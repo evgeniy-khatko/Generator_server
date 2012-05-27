@@ -3,7 +3,8 @@ WIN='i386-mingw32'
 LIN='i686-linux'
 require 'rubygems'
 require 'sinatra'
-require 'rack-flash'
+#require 'rack-flash'
+require 'sinatra/flash'
 #require 'haml'
 require 'erb'
 require 'json/pure'
@@ -38,7 +39,7 @@ configure do
 	set :environment, :development
 	set :port, PORT
 	set :server, %w[webrick]
-	use Rack::Flash
+	#use Rack::Flash
 		
 		# production mode settings
 		

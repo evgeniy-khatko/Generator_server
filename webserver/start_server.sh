@@ -1,4 +1,4 @@
 #! /bin/bash
 
-ruby controller.rb >> server.log 2>&1 &
+bundle exec ruby controller.rb >> server.log 2>&1 &
 
