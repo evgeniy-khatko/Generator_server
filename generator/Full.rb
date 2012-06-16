@@ -7,7 +7,7 @@ include Helper
 
 module Full		
 	PRIOR_FACTOR=100	
-	AVERAGE_TEST_LENGTH=2
+	AVERAGE_TEST_LENGTH=4
 	MAX_ITER_NUMBER=1000
 	TAG="FullEdgeCoverage"
   
@@ -83,23 +83,6 @@ module Full
 				raise AppError.new("cant make transition #{current_transition.name} in current context. Try LOGGING ('-l') -> log.txt. Check model parameters")
 			end
 			generate_gv(fsm,covered,nil,$filter) if $visualization
-			
-			# add tests
-			if (fsm.current_state.main and current_test.steps.length > AVERAGE_TEST_LENGTH) or current_transition.has_internal_state
-			  condition=(current_transition.has_condition)? current_transition.condition : ''
-				state=(fsm.current_state.name==fsm.start_state)? '' : fsm.current_state.name
-				current_test.new_step(current_transition.source,current_transition.target,current_transition.type)
-				current_test.expected=(current_transition.has_internal_state)? current_transition.internal_state : testsuite.expected_by_default
-				
-				testsuite.add_test(current_test)
-				current_test=Test.new(fsm.current_state.name)
-				current_test.precondition=fsm.current_state.name				
-			else
-				condition=(current_transition.has_condition)? current_transition.condition : ''
-				state=(fsm.current_state.name==fsm.start_state)? '' : fsm.current_state.name
-				current_test.new_step(current_transition.source,current_transition.target,current_transition.type)
-				current_test.expected=(current_transition.has_internal_state)? current_transition.internal_state : testsuite.expected_by_default
-			end
 
 			#define coverage						
 			coverage=covered.length.to_f/all_transitions.length.to_f
@@ -109,6 +92,24 @@ module Full
 			if iteration==MAX_ITER_NUMBER
 				e "Could not reach 100% coverage."
 				raise AppError.new("Could not reach 100% coverage. Try LOGGING ('-l') -> log.txt. Check model parameters") 
+			end
+			# add tests
+			if (fsm.current_state.main and current_test.steps.length > AVERAGE_TEST_LENGTH) or current_transition.has_internal_state
+			  condition=(current_transition.has_condition)? current_transition.condition : ''
+				state=(fsm.current_state.name==fsm.start_state)? '' : fsm.current_state.name
+				current_test.new_step(current_transition.source.name,current_transition.target.name,current_transition.type)
+				current_test.expected=(current_transition.has_internal_state)? current_transition.internal_state : testsuite.expected_by_default
+				testsuite.add_test(current_test)
+				current_test=Test.new(fsm.current_state.name)
+				current_test.precondition=fsm.current_state.name				
+			elsif
+				condition=(current_transition.has_condition)? current_transition.condition : ''
+				state=(fsm.current_state.name==fsm.start_state)? '' : fsm.current_state.name
+				current_test.new_step(current_transition.source.name,current_transition.target.name,current_transition.type)
+				current_test.expected=(current_transition.has_internal_state)? current_transition.internal_state : testsuite.expected_by_default
+				if coverage==1
+					testsuite.add_test(current_test)
+				end
 			end
 		end # end of main cycle
 	end # end of RUN method 

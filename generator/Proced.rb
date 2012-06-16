@@ -39,15 +39,15 @@ module Proced
 		# init model transitions
 		XPath.each(doc, "//transition"){|transition|					
 					id=transition.attributes["id"]
-					name=transition.attributes["name"]
 					source=model.find_state_by_id(transition.attributes["source"])
 					target=model.find_state_by_id(transition.attributes["target"])					
+					name=(transition.attributes["name"]==nil)? source.name+'-'+target.name : transition.attributes["name"]
 					action=transition.attributes["action"]
 					condition=transition.attributes["condition"]
 					chance=transition.attributes["chance"]
 					internalState=transition.attributes["internalState"]					
 					type=transition.attributes["type"]					
-					if(id==nil or name==nil or source==nil or target==nil or type==nil)
+					if(id==nil or source==nil or target==nil or type==nil)
 						sou=(source==nil)? '' : source.name
 						tar=(target==nil)? '' : target.name
 						e("XML model has inconsistent transition(s)")

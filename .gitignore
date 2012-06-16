@@ -8,4 +8,4 @@ CONVERTERS/_out_/*
 webserver/server.log
 webserver/server.pid
 server.log
-
+stats/*

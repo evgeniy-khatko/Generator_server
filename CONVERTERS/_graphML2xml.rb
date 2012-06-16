@@ -50,17 +50,17 @@ XPath.each(doc, "//edge"){|edge|
 		name=$1
 		transition.attributes["name"]=name.strip
 	end
-	condition=@edge_label.scan(/\[.+\]/).first
+	condition=@edge_label.to_s.scan(/\[.+\]/).first
 	transition.attributes["condition"]=condition.delete('[').delete(']').strip if not condition==nil
-	action=@edge_label.scan(/\/.+\//).first
+	action=@edge_label.to_s.scan(/\/.+\//).first
 	transition.attributes["action"]=action.delete('/').strip if not action==nil
-	internal_state=@edge_label.scan(/\{.+\}/).first
+	internal_state=@edge_label.to_s.scan(/\{.+\}/).first
 	transition.attributes["internalState"]=internal_state.delete('{').delete('}').strip if not internal_state==nil
-	chance=@edge_label.scan(/\<.+\>/).first
+	chance=@edge_label.to_s.scan(/\<.+\>/).first
 	transition.attributes["chance"]=chance.delete('<').delete('>').strip if not chance==nil
-	type=@edge_label.scan(/\\.+\\/).first
-	if not (type==nil or Alphabeth::TYPES.include?(type))
-		transition.attributes["type"]=type.delete('\\').delete('\\').strip 
+	type=@edge_label.to_s.scan(/\%\S+/).first
+	if not (type==nil or Alphabeth::TYPES.include?(type.delete('%')))
+		transition.attributes["type"]=type.delete('%').strip 
 	else
 		transition.attributes["type"]=Alphabeth.default 
 	end

@@ -196,13 +196,14 @@ class FSM
 		condition=(t.has_condition)? " [#{t.condition}]" : ''
 		action=(t.has_action)? " /#{t.action}/" : ''
 		internalState=(t.has_internal_state)? " {#{t.internal_state}}" : ''
+		type=" %#{t.type}"
 		color="red"
 		if is_covered and not is_next_transition
 			color="lightseagreen"
 		elsif is_next_transition
 			color="orange"
 		end
-		options=' [label="'+t.name+condition+action+internalState+'",color="'+color+'",fontname='+fontname+',fontsize='+fontsize+'];'
+		options=' [label="'+t.name+condition+action+internalState+type+'",color="'+color+'",fontname='+fontname+',fontsize='+fontsize+'];'
 		return definition+options
 	end
 
