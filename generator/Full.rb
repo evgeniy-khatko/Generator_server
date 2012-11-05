@@ -8,7 +8,7 @@ include Helper
 module Full		
 	PRIOR_FACTOR=100	
 	AVERAGE_TEST_LENGTH=4
-	MAX_ITER_NUMBER=1000
+	MAX_ITER_NUMBER=300
 	TAG="FullEdgeCoverage"
   
 	def run(fsm, testsuite)

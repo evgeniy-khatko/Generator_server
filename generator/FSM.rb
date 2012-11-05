@@ -223,5 +223,16 @@ class FSM
 		conditions=0
 		@transitions.each{|t| conditions+=1 if t.has_condition}
 		out+="CONDITIONS: #{conditions}\n"
+		euler=0
+		start_state = find_state_by_name(@start_state)
+		next_to_start = next_for(start_state).first
+		@states.each{|s|
+			i = transitions_to(s).length
+			i-=1 if s.name==next_to_start.name
+			o = transitions_from(s).length
+			euler+=[i,o].max
+		}
+		euler-=1 # exlude start transition
+		out+="EULER: #{euler}\n"
 	end
 end

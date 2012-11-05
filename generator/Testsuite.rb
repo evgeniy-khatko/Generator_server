@@ -43,6 +43,7 @@ class Testsuite
 		steps=0
 		@tests.each{|test| steps+=test.steps.length}
 		average_test_length=(tests==0)? 0 : steps/tests
+		out+="MADE TRANITIONS: #{steps}\n"
 		out+="TESTS: #{tests}\n"
 		out+="AVERAGE TEST LENGTH: #{average_test_length}\n"
 	end
