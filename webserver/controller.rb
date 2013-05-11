@@ -29,9 +29,12 @@ LOG='../log'
 TESTS='../tests'
 XML_MODEL='../model'
 ERROR_PICTURE=File.open('public/img/error.svg').read
-LIB='../lib'
 GENERATOR='../generator'
 TMP='../tmp'
+FileUtils.mkdir_p LOG unless File.exists? LOG
+FileUtils.mkdir_p TESTS unless File.exists? TESTS
+FileUtils.mkdir_p XML_MODEL unless File.exists? XML_MODEL
+FileUtils.mkdir_p TMP unless File.exists? TMP
 
 Sinatra.register Padrino::Helpers
 configure do
