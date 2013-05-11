@@ -25,10 +25,6 @@ end
                     
 PORT=8000
 RESIZE_FACTOR=0.5
-FileUtils.mkdir_p LOG unless File.exists? LOG
-FileUtils.mkdir_p TESTS unless File.exists? TESTS
-FileUtils.mkdir_p XML_MODEL unless File.exists? XML_MODEL
-FileUtils.mkdir_p TMP unless File.exists? TMP
 
 LOG="#{File.dirname(__FILE__)}/../log"
 TESTS="#{File.dirname(__FILE__)}/../tests"
@@ -37,6 +33,11 @@ ERROR_PICTURE=File.open("#{File.dirname(__FILE__)}/public/img/error.svg").read
 LIB="#{File.dirname(__FILE__)}/../lib"
 GENERATOR="#{File.dirname(__FILE__)}/../generator"
 TMP="#{File.dirname(__FILE__)}/../tmp"
+
+FileUtils.mkdir_p LOG unless File.exists? LOG
+FileUtils.mkdir_p TESTS unless File.exists? TESTS
+FileUtils.mkdir_p XML_MODEL unless File.exists? XML_MODEL
+FileUtils.mkdir_p TMP unless File.exists? TMP
 
 Sinatra.register Padrino::Helpers
 configure do
