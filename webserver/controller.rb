@@ -106,10 +106,11 @@ end
 		content_type :json
 		gv=File.open(TMP+'/model.gv')
 		gv_data=gv.readlines.last
-		puts gv_data
 		svg_data=generate_svg(gv_data,session[:filter],session[:size])				
-		status=(File.exists?(TESTS+'/tests.txt'))? 0 : 1		
-		#status=(Sys::ProcTable.ps(session[:generator_process].to_i)!=nil)? 1 : 0
+		status=(File.exists?(TESTS+'/tests.xml'))? 0 : 1		
+		#if RUBY_PLATFORM==WIN
+    #  status=(Sys::ProcTable.ps(session[:generator_process].to_i)!=nil)? 1 : 0
+		#end
 		return {:svg_data => svg_data, :status=>status}.to_json		
 	end
 
@@ -183,6 +184,8 @@ end
 	post '/stop_generator' do
 		if session[:generator_process]!=nil and generator_running?(session[:generator_process])
 			res=Process.kill(9,session[:generator_process].to_i) 
+      FileUtils.rm_f(LOG)
+      Dir.glob("#{TESTS}/tests.*").each{|testfile| File.delete(TESTS+'/'+testfile)}
 			raise "Cant stop generation process: PID=#{session[:generator_process]}" if res==nil
 			session[:generator_process]=nil
 		end		
