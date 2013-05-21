@@ -234,12 +234,12 @@ def get_buttons(widgets,wid_container)
 		elsif w.GetType.to_s==DP # dynamic area
 			da=DynamicArea.new(w.GetHashCode,wid_container.id,w.GetType.to_s,w.Name,w.IsVisible)	
 			w.PanelStates.ToArray.each{|ps|
-				da_page=Page.new(ps.GetHashCode,da.id,ps.GetType.to_s,false,ps.DiagramName) 
+				da_page=Page.new(ps.GetHashCode,da.id,ps.GetType.to_s,ps.DiagramName,false) 
 				da.add_page(da_page)	
 				get_buttons(ps.Widgets.ToArray,da_page)
 			}
     else # any other widget
-      ExpectedElement.new(w.GetHashCode, wid_container.id, w.GetType, get_name(w))
+      #ExpectedElement.new(w.GetHashCode, wid_container.id, w.GetType, get_name(w))
     end
 	}
 end
@@ -249,7 +249,7 @@ def load_model
 	# Prepare info for future use
 	$log.info 'Load model'
 	pages(@doc).each do |page| 
-		p=Page.new(page.GetHashCode,nil,page.GetType.to_s,true,page.PackageName)	
+		p=Page.new(page.GetHashCode,nil,page.GetType.to_s,page.PackageName,true)	
 		# get inputs from RPPage
 		page.NotesAnnotation.PropertyNames.each{|propName|
 			val=page.NotesAnnotation.GetPropertyValue(propName)
@@ -267,7 +267,7 @@ def generate_xml
 	# generate states from pages (pages are RPPages+RPDynamicPanel_states)
 	#	
 	Page.all.each{|page|
-		gen_state(@xml,page.id,page.name,page.inputs,page.type,page.type==PAGE, page.expected_elements.collect{ |e| { e.type => e.name } })	
+		gen_state(@xml,page.id,page.name,page.inputs,page.type,page.type==PAGE, page.buttons.collect{ |e| { e.type => e.name } })	
 	}
 
 	# generate transitions
@@ -305,7 +305,7 @@ def generate_xml
 				raise "Cant find target State on Page #{page.name} through Button #{button.name}, Case #{c.description}" if target_page_id==nil
 				raise "Cant find source State on Page #{page.name} through Button #{button.name}, Case #{c.description}" if parse_results.empty?
 				parse_results.each{|source_page_id|
-					gen_transition(@xml,"#{source_page_id}-#{target_page_id}",button.name+descr,source_page_id,target_page_id,"#{user_action}(\"#{button.name}\")",condition,action,internal_state,chance)
+					gen_transition(@xml,"#{source_page_id}-#{target_page_id}",button.name+descr,source_page_id,target_page_id,"#{user_action}(\"#{button.name}\")",condition,action,internal_state,chance,user_action)
 				}
 			}			
 		}
