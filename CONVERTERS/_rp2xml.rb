@@ -67,6 +67,10 @@ class Page < RP
 	def buttons
 		return Button.fnd({:parent_id=>self.id})
 	end
+
+	def expected_elements
+		return ExpectedElement.fnd({:parent_id=>self.id})
+	end
 private
 	@objects=[]
 end
@@ -112,6 +116,12 @@ class Button < RP
 	
 private
 	@objects=[]
+end
+
+class ExpectedElement < RP
+  def initialize(id, parent_id, type, name)
+    super(id, parent_id, type, name)
+  end
 end
 
 class DynamicArea < RP
@@ -193,7 +203,7 @@ def get_buttons(widgets,wid_container)
 	# 2. instance of the ruby Page class. It's used to store widgets info in suitable form
 	# workflow: widgets (RP widgets) -> info -> wid_container (Page class instance)
 	widgets.each{|w|
-		if w.HasInteraction and w.GetType.to_s!=DP
+		if w.HasInteraction and w.GetType.to_s!=DP # active button or area on the screen
 			name=get_name(w)
 			raise "Bad name for #{w.id} footnote #{w.FootnoteNumber}, on page #{wid_container.name}\nName must be '' < name < 15 symb" if name==nil
 			but=Button.new(w.GetHashCode,wid_container.id,w.GetType.to_s,name) 
@@ -221,14 +231,16 @@ def get_buttons(widgets,wid_container)
 				end #if
 			}		
 			wid_container.add_button(but) 
-		elsif w.GetType.to_s==DP
+		elsif w.GetType.to_s==DP # dynamic area
 			da=DynamicArea.new(w.GetHashCode,wid_container.id,w.GetType.to_s,w.Name,w.IsVisible)	
 			w.PanelStates.ToArray.each{|ps|
 				da_page=Page.new(ps.GetHashCode,da.id,ps.GetType.to_s,false,ps.DiagramName) 
 				da.add_page(da_page)	
 				get_buttons(ps.Widgets.ToArray,da_page)
 			}
-		end
+    else # any other widget
+      ExpectedElement.new(w.GetHashCode, wid_container.id, w.GetType, get_name(w))
+    end
 	}
 end
 
@@ -255,7 +267,7 @@ def generate_xml
 	# generate states from pages (pages are RPPages+RPDynamicPanel_states)
 	#	
 	Page.all.each{|page|
-		gen_state(@xml,page.id,page.name,page.inputs,page.type,page.type==PAGE)	
+		gen_state(@xml,page.id,page.name,page.inputs,page.type,page.type==PAGE, page.expected_elements.collect{ |e| { e.type => e.name } })	
 	}
 
 	# generate transitions
@@ -287,12 +299,13 @@ def generate_xml
 				internal_state=parse_results.pop
 				action=parse_results.pop
 				condition=parse_results.pop
+				user_action=parse_results.pop
 				target_page_id=parse_results.pop
 				descr=(TRANSITION_CONDITION===c.description or TRANSITION_ACTION===c.description or TRANSITION_INTERNAL===c.description or TRANSITION_CHANCE===c.description or TRANSITION_CASE===c.description)? '' : " - #{c.description}"
 				raise "Cant find target State on Page #{page.name} through Button #{button.name}, Case #{c.description}" if target_page_id==nil
 				raise "Cant find source State on Page #{page.name} through Button #{button.name}, Case #{c.description}" if parse_results.empty?
 				parse_results.each{|source_page_id|
-					gen_transition(@xml,"#{source_page_id}-#{target_page_id}",button.name+descr,source_page_id,target_page_id,condition,action,internal_state,chance)
+					gen_transition(@xml,"#{source_page_id}-#{target_page_id}",button.name+descr,source_page_id,target_page_id,"#{user_action}(\"#{button.name}\")",condition,action,internal_state,chance)
 				}
 			}			
 		}
@@ -513,21 +526,30 @@ def parse_case(c)
 		end
 	}
 
+	if TRANSITION_USER_ACTION===c.description
+		results.push($1) 
+	else
+		results.push('UnknownUserAction')
+	end
+
 	if TRANSITION_CONDITION===c.description
 		results.push($1) 
 	else
 		results.push(nil)
 	end
+
 	if TRANSITION_ACTION===c.description
 		results.push($1) 
 	else
 		results.push(nil)
 	end
+
 	if TRANSITION_INTERNAL===c.description
 		results.push($1) 
 	else
 		results.push(nil)
 	end
+
 	if TRANSITION_CHANCE===c.description
 		results.push($1) 
 	else
@@ -580,26 +602,29 @@ end
 
 
 ############################# XML generator related functons #############################
-def gen_state(xml_document,id,node_name,node_inputs,description,node_is_main)
+def gen_state(xml_document,id,node_name,node_inputs,description,node_is_main,elements)
 	state=Element.new("state")
 	state.attributes["id"]=id
 	state.attributes["name"]=node_name
 	state.attributes["inputs"]=node_inputs
 	state.attributes["description"]=description
 	state.attributes["main"]=node_is_main
+	state.attributes["elements"]=elements
 	xml_document.root.add_element(state)	
 end
 
-def gen_transition(xml_document,id,edge_name,sou,tar,condition,action,internal_state,chance)
+def gen_transition(xml_document,id,edge_name,sou,tar,user_action,condition,action,internal_state,chance,type)
 	transition=Element.new("transition")
 	transition.attributes["id"]=id
 	transition.attributes["name"]=edge_name
 	transition.attributes["source"]=sou
 	transition.attributes["target"]=tar
+	transition.attributes["user_action"]=user_action
 	transition.attributes["condition"]=condition
 	transition.attributes["action"]=action
 	transition.attributes["internalState"]=internal_state
 	transition.attributes["chance"]=chance
+	transition.attributes["type"]=type
 	xml_document.root.add_element(transition)	
 end
 

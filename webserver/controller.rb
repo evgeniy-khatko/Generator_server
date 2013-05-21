@@ -118,7 +118,7 @@ end
 		Process.kill(9,session[:generator_process].to_i) if session[:generator_process]!=nil and generator_running?(session[:generator_process])
 		session[:client_id]=Time.now.strftime("%F_%H-%M-%S") if session[:client_id]==nil
 		FileUtils.rm_f(LOG)
-		Dir.glob("#{TESTS}/tests.*").each{|testfile| File.delete(TESTS+'/'+testfile)}
+		Dir.glob("#{TESTS}/tests.*").each{|testfile| File.delete(testfile)}
 		$initial_gv_data=get_initial_data		
 		erb :index   		
 	end

@@ -7,7 +7,7 @@ include Helper
 
 module Full		
 	PRIOR_FACTOR=100	
-	AVERAGE_TEST_LENGTH=4
+	AVERAGE_TEST_LENGTH=100
 	MAX_ITER_NUMBER=1000
 	TAG="FullEdgeCoverage"
   
@@ -24,12 +24,36 @@ module Full
 		coverage=0
 		#current_edge=first_edge
 		current_transition=fsm.transitions_from(fsm.current_state).first # 1 state should always have 1 out edge, so making this edge current
+		current_test=Test.new(fsm.current_state.name)
+    if (fsm.current_state.main and current_test.steps.length > AVERAGE_TEST_LENGTH) or current_transition.has_internal_state
+      current_test.new_step(current_transition.source.name,
+                            current_transition.target.name,
+                            current_transition.type,
+                            current_transition.action, 
+                            current_transition.condition, 
+                            current_transition.target.elements,
+                            current_transition.internal_state, 
+                           )
+      testsuite.add_test(current_test)
+      current_test=Test.new(fsm.current_state.name)
+    else
+      current_test.new_step(current_transition.source.name,
+                            current_transition.target.name,
+                            current_transition.type,
+                            current_transition.action, 
+                            current_transition.condition, 
+                            current_transition.target.elements,
+                            current_transition.internal_state, 
+                           )
+      if coverage >= 1
+        testsuite.add_test(current_test)
+      end
+    end
 		generate_gv(fsm,[],nil,$filter) if $visualization
 		fsm.make_transition(current_transition) # move fsm to the 2nd state, respecting conditions and actions if extended mode		
 		covered=[current_transition]		
 		#remove_svg
 		generate_gv(fsm,covered,current_transition,$filter) if $visualization
-		current_test=Test.new(fsm.current_state.name)
 		all_transitions=fsm.transitions
 		iteration=0
 		
@@ -87,7 +111,6 @@ module Full
 			#define coverage						
 			coverage=covered.length.to_f/all_transitions.length.to_f
 			percent="#{(coverage*100).ceil.to_s} %"
-			#i(percent)
 			print "\r#{percent}"			
 			if iteration==MAX_ITER_NUMBER
 				e "Could not reach 100% coverage."
@@ -95,19 +118,26 @@ module Full
 			end
 			# add tests
 			if (fsm.current_state.main and current_test.steps.length > AVERAGE_TEST_LENGTH) or current_transition.has_internal_state
-			  condition=(current_transition.has_condition)? current_transition.condition : ''
-				state=(fsm.current_state.name==fsm.start_state)? '' : fsm.current_state.name
-				current_test.new_step(current_transition.source.name,current_transition.target.name,current_transition.type)
-				current_test.expected=(current_transition.has_internal_state)? current_transition.internal_state : testsuite.expected_by_default
+				current_test.new_step(current_transition.source.name,
+                              current_transition.target.name,
+                              current_transition.type,
+                              current_transition.action, 
+                              current_transition.condition, 
+                              current_transition.target.elements,
+                              current_transition.internal_state, 
+                             )
 				testsuite.add_test(current_test)
 				current_test=Test.new(fsm.current_state.name)
-				current_test.precondition=fsm.current_state.name				
-			elsif
-				condition=(current_transition.has_condition)? current_transition.condition : ''
-				state=(fsm.current_state.name==fsm.start_state)? '' : fsm.current_state.name
-				current_test.new_step(current_transition.source.name,current_transition.target.name,current_transition.type)
-				current_test.expected=(current_transition.has_internal_state)? current_transition.internal_state : testsuite.expected_by_default
-				if coverage==1
+      else
+				current_test.new_step(current_transition.source.name,
+                              current_transition.target.name,
+                              current_transition.type,
+                              current_transition.action, 
+                              current_transition.condition, 
+                              current_transition.target.elements,
+                              current_transition.internal_state, 
+                             )
+				if coverage >= 1
 					testsuite.add_test(current_test)
 				end
 			end

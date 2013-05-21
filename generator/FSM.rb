@@ -10,10 +10,10 @@ class FSM
 	DEFAULT_WEIGHT=1
 	
 	class State
-		attr_reader :id, :name, :description, :main
+		attr_reader :id, :name, :description, :main, :elements
 		attr_accessor :in, :out, :has_description, :has_inputs, :inputs
 		
-		def initialize(id,name,inputs,desc,main)
+		def initialize(id,name,inputs,desc,main,elements={})
 			@id=id
 			@name=name
 			@description=desc
@@ -21,6 +21,7 @@ class FSM
 			@main=main
 			@has_description=(desc==nil)? false : true
 			@has_inputs=(inputs==nil or inputs=='')? false : true
+      @elements=elements
 		end
 		
 		def info
@@ -107,7 +108,6 @@ class FSM
 		return nil
 	end
 
-	
 	def new_state(id,name,inputs,desc,main)
 		new_state=State.new(id,name,inputs,desc,main)
 		@states << new_state
