@@ -267,7 +267,7 @@ def generate_xml
 	# generate states from pages (pages are RPPages+RPDynamicPanel_states)
 	#	
 	Page.all.each{|page|
-		gen_state(@xml,page.id,page.name,page.inputs,page.type,page.type==PAGE, page.buttons.collect{ |e| { e.type => e.name } })	
+		gen_state(@xml,page.id,page.name,page.inputs,page.type,page.type==PAGE, page.buttons.collect{ |e| e.name })	
 	}
 
 	# generate transitions
@@ -299,13 +299,13 @@ def generate_xml
 				internal_state=parse_results.pop
 				action=parse_results.pop
 				condition=parse_results.pop
-				user_action=parse_results.pop
+				type=parse_results.pop
 				target_page_id=parse_results.pop
 				descr=(TRANSITION_CONDITION===c.description or TRANSITION_ACTION===c.description or TRANSITION_INTERNAL===c.description or TRANSITION_CHANCE===c.description or TRANSITION_CASE===c.description)? '' : " - #{c.description}"
 				raise "Cant find target State on Page #{page.name} through Button #{button.name}, Case #{c.description}" if target_page_id==nil
 				raise "Cant find source State on Page #{page.name} through Button #{button.name}, Case #{c.description}" if parse_results.empty?
 				parse_results.each{|source_page_id|
-					gen_transition(@xml,"#{source_page_id}-#{target_page_id}",button.name+descr,source_page_id,target_page_id,"#{user_action}(\"#{button.name}\")",condition,action,internal_state,chance,user_action)
+					gen_transition(@xml,"#{source_page_id}-#{target_page_id}",button.name+descr,source_page_id,target_page_id,"#{type}(\"#{button.name}\")",condition,action,internal_state,chance,type)
 				}
 			}			
 		}
@@ -526,7 +526,7 @@ def parse_case(c)
 		end
 	}
 
-	if TRANSITION_USER_ACTION===c.description
+	if TRANSITION_TYPE===c.description
 		results.push($1) 
 	else
 		results.push('UnknownUserAction')
