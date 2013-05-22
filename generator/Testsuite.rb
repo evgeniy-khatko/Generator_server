@@ -28,7 +28,7 @@ class Testsuite
 				s.attributes["from"]=step.from
 				s.attributes["to"]=step.to
 				s.attributes["user_action"]=step.user_action
-				s.attributes["user_action_params"]=step.user_action_params
+				s.attributes["params"]=step.params
 				s.attributes["condition"]=step.condition
 				s.attributes["expected_elements"]=step.expected_elements
 				s.attributes["internal_check"]=step.internal_check

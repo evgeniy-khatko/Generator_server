@@ -8,12 +8,21 @@ class FSM
 	
 	attr_accessor :transitions, :states, :fsmContext, :current_state, :start_state, :temporary_deleted
 	DEFAULT_WEIGHT=1
+
+  class Element
+    attr_accessor :locator, :data
+
+    def initialize(locator ={}, data = '')
+      @locator = locator
+      @data = data
+    end
+  end
 	
 	class State
 		attr_reader :id, :name, :description, :main, :elements
 		attr_accessor :in, :out, :has_description, :has_inputs, :inputs
 		
-		def initialize(id,name,inputs,desc,main,elements={})
+		def initialize(id,name,inputs,desc,main,elements)
 			@id=id
 			@name=name
 			@description=desc
@@ -33,7 +42,7 @@ class FSM
 
 	class Transition
 		attr_reader :id, :name, :chance, :internal_state
-		attr_accessor :has_condition, :has_action, :weight, :has_internal_state, :source, :target, :condition, :action, :type
+		attr_accessor :has_condition, :has_action, :weight, :has_internal_state, :source, :target, :condition, :action, :type, :user_action
 
 		def initialize(id,name,source,target,condition,action,chance,internalState,type)
 			@id=id
@@ -41,6 +50,7 @@ class FSM
 			@source=source
 			@target=target
 			@condition=condition
+			@internal_state=internalState
 			@has_condition=(condition==nil)? false : true
 			@action=action
 			@has_action=(action==nil)? false : true
@@ -49,6 +59,7 @@ class FSM
 			@internal_state=internalState
 			@has_internal_state=(internalState==nil)? false : true
 			@type=type
+      @user_action = ""
 		end
 		
 		def info
@@ -108,8 +119,8 @@ class FSM
 		return nil
 	end
 
-	def new_state(id,name,inputs,desc,main)
-		new_state=State.new(id,name,inputs,desc,main)
+	def new_state(id,name,inputs,desc,main,elements=[])
+		new_state=State.new(id,name,inputs,desc,main,elements)
 		@states << new_state
 		return new_state
 	end

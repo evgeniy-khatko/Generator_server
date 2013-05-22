@@ -28,13 +28,14 @@ module Proced
 					id=state.attributes["id"]
 					name=state.attributes["name"]
 					description=state.attributes["description"]
+					elements=state.attributes["elements"]
 					stateIsMain=(state.attributes["main"]=="true")? true : false
 					inputs=state.attributes["inputs"]
 					if(id==nil or name==nil)						
 						e("XML model has inconsistent state(s)")
 						raise AppError.new("XML model has inconsistent state: : name=#{name}, id=#{id}")						
 					end					
-					model.new_state(id,name,inputs,description,stateIsMain)
+					model.new_state(id,name,inputs,description,stateIsMain,elements)
 		}
 		# init model transitions
 		XPath.each(doc, "//transition"){|transition|					
@@ -42,10 +43,11 @@ module Proced
 					source=model.find_state_by_id(transition.attributes["source"])
 					target=model.find_state_by_id(transition.attributes["target"])					
 					name=(transition.attributes["name"]==nil)? source.name+'-'+target.name : transition.attributes["name"]
+					user_action=transition.attributes["user_action"]
 					action=transition.attributes["action"]
 					condition=transition.attributes["condition"]
 					chance=transition.attributes["chance"]
-					internalState=transition.attributes["internalState"]					
+					internalState=transition.attributes["internal"]					
 					type=transition.attributes["type"]					
 					if(id==nil or source==nil or target==nil or type==nil)
 						sou=(source==nil)? '' : source.name
@@ -53,7 +55,8 @@ module Proced
 						e("XML model has inconsistent transition(s)")
 						raise AppError.new("XML model has inconsistent transition: name=#{name}, id=#{id}, source=#{sou}, target=#{tar}")
 					end      					
-					model.new_transition(id,name,source,target,condition,action,chance,internalState,type)
+					tr = model.new_transition(id,name,source,target,condition,action,chance,internalState,type)
+          tr.user_action = user_action
 		}
 
 		# need to decompose FSM: to split all states with inputs into 2 - state and state_INPUTDONE		
@@ -72,7 +75,11 @@ module Proced
 				# connecting 2 splitted states with inputs:
 				inputs.split("\n").each{|input|
 					if input!=''
-						model.new_transition(state.id+'-'+state_done.id,TRANSITION_IN_DONE_NAME,state,state_done,nil,input,nil,nil,Alphabeth::ENTER)					
+						tr = model.new_transition(state.id+'-'+state_done.id,TRANSITION_IN_DONE_NAME,state,state_done,nil,input,nil,nil,Alphabeth::ENTER)
+            params = input.split(";")
+            values = []
+            params.each{ |p| values << p.split("=")[1].strip }
+            tr.user_action = "#{Alphabeth::ENTER+'_to_state_'+state.name.gsub(/\s+/,"_")}(#{values.join(",")})"
 						d "Added transition name=#{input}"
 					end
 				}

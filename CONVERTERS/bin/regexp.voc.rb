@@ -1,11 +1,11 @@
 CASE_LINE=Regexp.new('\s{2}(.+):$')
 INTERACTION_LINE=Regexp.new('\s{4}(.+)$')
 
-TRANSITION_USER_ACTION=Regexp.new('^([^;]+);')
-TRANSITION_CONDITION=Regexp.new('^condition\((.+)\)')
-TRANSITION_ACTION=Regexp.new('^action\((.+)\)')
-TRANSITION_INTERNAL=Regexp.new('^internal\((,+)\)')
-TRANSITION_CHANCE=Regexp.new('^chance\((.+)\)')
+TRANSITION_TYPE=Regexp.new('^([^;]+);')
+TRANSITION_CONDITION=Regexp.new('condition\(([^);]+)\)')
+TRANSITION_ACTION=Regexp.new('action\(([^);]+)\)')
+TRANSITION_INTERNAL=Regexp.new('internal\(([^);]+)\)')
+TRANSITION_CHANCE=Regexp.new('chance\(([^);]+)\)')
 TRANSITION_CASE=Regexp.new('Case\s\d+')
 
 # MAIN-------->
