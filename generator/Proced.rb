@@ -28,13 +28,14 @@ module Proced
 					id=state.attributes["id"]
 					name=state.attributes["name"]
 					description=state.attributes["description"]
-					elements=state.attributes["elements"]
 					stateIsMain=(state.attributes["main"]=="true")? true : false
 					inputs=state.attributes["inputs"]
 					if(id==nil or name==nil)						
 						e("XML model has inconsistent state(s)")
 						raise AppError.new("XML model has inconsistent state: : name=#{name}, id=#{id}")						
 					end					
+          elements = []
+          state.elements.each{ |ee| elements << Element.new( ee.attributes["type"], ee.attributes["text"], ee.attributes["data"] ) }
 					model.new_state(id,name,inputs,description,stateIsMain,elements)
 		}
 		# init model transitions
@@ -43,7 +44,6 @@ module Proced
 					source=model.find_state_by_id(transition.attributes["source"])
 					target=model.find_state_by_id(transition.attributes["target"])					
 					name=(transition.attributes["name"]==nil)? source.name+'-'+target.name : transition.attributes["name"]
-					user_action=transition.attributes["user_action"]
 					action=transition.attributes["action"]
 					condition=transition.attributes["condition"]
 					chance=transition.attributes["chance"]
@@ -54,9 +54,10 @@ module Proced
 						tar=(target==nil)? '' : target.name
 						e("XML model has inconsistent transition(s)")
 						raise AppError.new("XML model has inconsistent transition: name=#{name}, id=#{id}, source=#{sou}, target=#{tar}")
-					end      					
-					tr = model.new_transition(id,name,source,target,condition,action,chance,internalState,type)
-          tr.user_action = user_action
+					end
+          element = nil
+          transition.elements.each{ |e| elements = Element.new(e.type, e.text, e.data) }
+					tr = model.new_transition(id,name,source,target,condition,action,chance,internalState,element)
 		}
 
 		# need to decompose FSM: to split all states with inputs into 2 - state and state_INPUTDONE		

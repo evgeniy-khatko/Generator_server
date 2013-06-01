@@ -28,7 +28,7 @@ module Full
 		current_test=Test.new(fsm.current_state.name)
     current_test.new_step(current_transition.source.name,
                           current_transition.target.name,
-                          current_transition.user_action,
+                          current_transition.element,
                           (current_transition.has_action)? current_transition.action : '', 
                           (current_transition.has_condition)? current_transition.condition : '', 
                           current_transition.target.elements,
@@ -104,7 +104,7 @@ module Full
 			if (fsm.current_state.main and current_test.steps.length > AVERAGE_TEST_LENGTH) or current_transition.has_internal_state
 				current_test.new_step(current_transition.source.name,
                               current_transition.target.name,
-                              current_transition.user_action,
+                              current_transition.element,
                               (current_transition.has_action)? current_transition.action : '', 
                               (current_transition.has_condition)? current_transition.condition : '', 
                               current_transition.target.elements,
@@ -117,7 +117,7 @@ module Full
 				#state=(fsm.current_state.name==fsm.start_state)? '' : fsm.current_state.name
 				current_test.new_step(current_transition.source.name,
                               current_transition.target.name,
-                              current_transition.user_action,
+                              current_transition.element,
                               (current_transition.has_action)? current_transition.action : '', 
                               (current_transition.has_condition)? current_transition.condition : '', 
                               current_transition.target.elements,

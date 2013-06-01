@@ -11,6 +11,16 @@ include Axure::Document
 
 MAX_WIDGET_NAME_LENGTH=15
 
+class Element
+  attr_accessor :text, :type, :data
+
+  def initialize(type, text, data = '')
+    @type = nil
+    @text = text
+    @data = data
+  end
+end
+
 class RP
 	attr_reader :id,:parent_id,:type
 	attr_accessor :name
@@ -267,7 +277,7 @@ def generate_xml
 	# generate states from pages (pages are RPPages+RPDynamicPanel_states)
 	#	
 	Page.all.each{|page|
-		gen_state(@xml,page.id,page.name,page.inputs,page.type,page.type==PAGE, page.buttons.collect{ |e| e.name })	
+		gen_state(@xml,page.id,page.name,page.inputs,page.type,page.type==PAGE, page.buttons.collect{ |b| Element.new(b.type,b.name,'') })	
 	}
 
 	# generate transitions
@@ -301,11 +311,12 @@ def generate_xml
 				condition=parse_results.pop
 				type=parse_results.pop
 				target_page_id=parse_results.pop
+        element = Element.new(type, button.name, '')
 				descr=(TRANSITION_CONDITION===c.description or TRANSITION_ACTION===c.description or TRANSITION_INTERNAL===c.description or TRANSITION_CHANCE===c.description or TRANSITION_CASE===c.description)? '' : " - #{c.description}"
 				raise "Cant find target State on Page #{page.name} through Button #{button.name}, Case #{c.description}" if target_page_id==nil
 				raise "Cant find source State on Page #{page.name} through Button #{button.name}, Case #{c.description}" if parse_results.empty?
 				parse_results.each{|source_page_id|
-					gen_transition(@xml,"#{source_page_id}-#{target_page_id}",button.name+descr,source_page_id,target_page_id,"#{type}(\"#{button.name}\")",condition,action,internal_state,chance,type)
+					gen_transition(@xml,"#{source_page_id}-#{target_page_id}",button.name+descr,source_page_id,target_page_id,element,condition,action,internal_state,chance)
 				}
 			}			
 		}
@@ -526,12 +537,6 @@ def parse_case(c)
 		end
 	}
 
-	if TRANSITION_TYPE===c.description
-		results.push($1) 
-	else
-		results.push('UnknownUserAction')
-	end
-
 	if TRANSITION_CONDITION===c.description
 		results.push($1) 
 	else
@@ -609,22 +614,31 @@ def gen_state(xml_document,id,node_name,node_inputs,description,node_is_main,ele
 	state.attributes["inputs"]=node_inputs
 	state.attributes["description"]=description
 	state.attributes["main"]=node_is_main
-	state.attributes["elements"]=elements
+  elements.each{ |e| 
+    ee = Element.new("expected_element")
+    ee.attributes["type"] = e.type
+    ee.attributes["text"] = e.text
+    ee.attributes["data"] = e.data
+    state.add_element(ee)
+  }
 	xml_document.root.add_element(state)	
 end
 
-def gen_transition(xml_document,id,edge_name,sou,tar,user_action,condition,action,internal_state,chance,type)
+def gen_transition(xml_document,id,edge_name,sou,tar,element,condition,action,internal_state,chance)
 	transition=Element.new("transition")
 	transition.attributes["id"]=id
 	transition.attributes["name"]=edge_name
 	transition.attributes["source"]=sou
 	transition.attributes["target"]=tar
-	transition.attributes["user_action"]=user_action
 	transition.attributes["condition"]=condition
 	transition.attributes["action"]=action
 	transition.attributes["internalState"]=internal_state
 	transition.attributes["chance"]=chance
-	transition.attributes["type"]=type
+  e = Element.new("element")
+  e.attributes["type"] = element.type
+  e.attributes["text"] = element.text
+  e.attributes["data"] = element.data
+  transition.add_element(e)
 	xml_document.root.add_element(transition)	
 end
 

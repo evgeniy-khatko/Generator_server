@@ -10,10 +10,11 @@ class FSM
 	DEFAULT_WEIGHT=1
 
   class Element
-    attr_accessor :locator, :data
+    attr_accessor :text, :type, :data
 
-    def initialize(locator ={}, data = '')
-      @locator = locator
+    def initialize(type, text, data = '')
+      @type = nil
+      @text = text
       @data = data
     end
   end
@@ -42,9 +43,9 @@ class FSM
 
 	class Transition
 		attr_reader :id, :name, :chance, :internal_state
-		attr_accessor :has_condition, :has_action, :weight, :has_internal_state, :source, :target, :condition, :action, :type, :user_action
+		attr_accessor :has_condition, :has_action, :weight, :has_internal_state, :source, :target, :condition, :action, :element
 
-		def initialize(id,name,source,target,condition,action,chance,internalState,type)
+		def initialize(id,name,source,target,condition,action,chance,internalState,element)
 			@id=id
 			@name=name
 			@source=source
@@ -58,8 +59,7 @@ class FSM
 			@weight=(chance==nil)? DEFAULT_WEIGHT : DEFAULT_WEIGHT/@chance
 			@internal_state=internalState
 			@has_internal_state=(internalState==nil)? false : true
-			@type=type
-      @user_action = ""
+      @element = element
 		end
 		
 		def info

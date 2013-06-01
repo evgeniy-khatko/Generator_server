@@ -27,11 +27,21 @@ class Testsuite
 				s=Element.new("step")
 				s.attributes["from"]=step.from
 				s.attributes["to"]=step.to
-				s.attributes["user_action"]=step.user_action
 				s.attributes["params"]=step.params
 				s.attributes["condition"]=step.condition
-				s.attributes["expected_elements"]=step.expected_elements
 				s.attributes["internal_check"]=step.internal_check
+        e = Element.new('element')
+        e.attributes["type"] = step.element.type
+        e.attributes["text"] = step.element.text
+        e.attributes["data"] = step.element.data
+        step.expected_elements.each{ |ee| 
+          e = Element.new('expected_element')
+          e.attributes["type"] = step.element.type
+          e.attributes["text"] = step.element.text
+          e.attributes["data"] = step.element.data
+          s.add_element(ee)
+        }
+        s.add_element(e)
 				t.add_element(s)
 			}
 			out.root.add_element(t)
