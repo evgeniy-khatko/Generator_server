@@ -10,16 +10,9 @@ include System::Collections::Generic
 include Axure::Document
 
 MAX_WIDGET_NAME_LENGTH=15
-
-class Element
-  attr_accessor :text, :type, :data
-
-  def initialize(type, text, data = '')
-    @type = nil
-    @text = text
-    @data = data
-  end
-end
+VARIOUS = 'VARIOUS'
+DETERMINISTIC = 'DETERMINISTIC'
+EXPECTED = 'EXPECTED'
 
 class RP
 	attr_reader :id,:parent_id,:type
@@ -61,55 +54,91 @@ private
 	end
 end
 
+class Case
+  attr_reader :description,:interactions,:parent
+  #OnClick:
+  #	Case 1 (If visibility of panel Menus&Dialogs equals false): <-- case description
+  #		Open Home in Current Window <-- case interaction
+  #		App -> close <-- case interaction 
+  #	Case 2 (Else If True):
+  #		Hide Menus&Dialogs
+  def initialize(case_desc,parent)
+    @description=case_desc
+    @interactions=[]
+    @parent=parent
+  end
+
+  def add_interaction(inter_desc)
+    @interactions.push(inter_desc)
+  end
+end
+
 class Page < RP
-	attr_accessor :buttons, :inputs, :main
-	def initialize(id,parent_id,type,name,main,inputs='')
+	attr_accessor :main, :cases
+	def initialize(id,parent_id,type,name,main)
 		super(id,parent_id,type,name)
-		@buttons=[]
-		@inputs=inputs
 		@main=main
+    @cases = []
+    @delements = []
+    @velements = []
+    @expected_elements = []
+	end
+  
+	def add_delement(obj)
+		@delements.push(obj)
 	end
 
-	def add_button(obj)
-		@buttons.push(obj)
+	def delements
+		return DElement.fnd({:parent_id=>self.id})
 	end
 
-	def buttons
-		return Button.fnd({:parent_id=>self.id})
+	def velements
+		return VElement.fnd({:parent_id=>self.id})
+	end
+
+	def add_case(obj)
+		@cases.push(obj)
 	end
 
 	def expected_elements
 		return ExpectedElement.fnd({:parent_id=>self.id})
 	end
+
 private
 	@objects=[]
 end
 
-class Button < RP
-
-	class Case
-		attr_reader :description,:interactions,:parent
-		#OnClick:
-		#	Case 1 (If visibility of panel Menus&Dialogs equals false): <-- case description
-		#		Open Home in Current Window <-- case interaction
-		#		App -> close <-- case interaction 
-		#	Case 2 (Else If True):
-		#		Hide Menus&Dialogs
-		def initialize(case_desc,parent)
-			@description=case_desc
-			@interactions=[]
-			@parent=parent
-		end
-
-		def add_interaction(inter_desc)
-			@interactions.push(inter_desc)
-		end
-
+class VElement < RP
+	attr_accessor :cases, :type, :eq_class, :action, :data
+	def initialize(id,parent_id,name,eq_class, action, data)
+    @type = VARIOUS
+		super(id,parent_id,VARIOUS,name)
+		@cases=[]
+    @eq_class = eq_class
+    @action = action
+    @data = data
 	end
 
-	attr_accessor :cases
-	def initialize(id,parent_id,type,name)
-		super(id,parent_id,type,name)
+	def add_case(obj)
+		@cases.push(obj)
+	end
+
+	def parent
+		parents=Page.fnd({:id=>self.parent_id})
+		raise "VElement #{self.name}(#{self.id}) has more then 1 parent: #{parents.collect{|p| p.name}.join(',')}" if parents.length>1
+		return parents.first
+	end
+
+	
+private
+	@objects=[]
+end
+
+class DElement < RP
+	attr_accessor :cases, :type
+	def initialize(id,parent_id,name)
+    @type = DETERMINISTIC
+		super(id,parent_id,DETERMINISTIC,name)
 		@cases=[]
 	end
 
@@ -119,7 +148,7 @@ class Button < RP
 
 	def parent
 		parents=Page.fnd({:id=>self.parent_id})
-		raise "Button #{self.name}(#{self.id}) has more then 1 parent: #{parents.collect{|p| p.name}.join(',')}" if parents.length>1
+		raise "DElement #{self.name}(#{self.id}) has more then 1 parent: #{parents.collect{|p| p.name}.join(',')}" if parents.length>1
 		return parents.first
 	end
 
@@ -129,9 +158,15 @@ private
 end
 
 class ExpectedElement < RP
-  def initialize(id, parent_id, type, name)
-    super(id, parent_id, type, name)
+	attr_accessor :type
+
+  def initialize(id, parent_id, name)
+    @type = EXPECTED
+    super(id, parent_id, EXPECTED, name)
   end
+
+private
+	@objects=[]
 end
 
 class DynamicArea < RP
@@ -207,16 +242,41 @@ def get_name(widget)
 	return widget.Name
 end
 
-def get_buttons(widgets,wid_container)
+def get_velements(page)
+  if page.HasInteraction 
+    page.Interaction.Events.ToArray.each{|event|
+      if event.EventName=='OnLoad' and event.EventDescription!=nil
+        events=event.EventDescription.split("\n") 
+        events.shift # removing 'OnLoad:'
+        current_eq_class = nil
+        events.each{|line|
+          if CASE_LINE===line
+            current_eq_class = line
+          elsif INPUT===line
+            velement = VElement.new($1,page.id,$1,current_eq_class,'INPUT',data)
+          elsif SELECT===line
+            velement = VElement.new($1,page.id,$1,current_eq_class,'SELECT',data)
+          elsif CHECK===line
+            velement = VElement.new($1,page.id,$1,current_eq_class,'CHECK',data)
+          else
+            raise "unknown inputs type on page #{page.name}, case: #{line}"
+          end
+        } 
+      end #if
+    }		
+  end
+end
+
+def get_delements(widgets,wid_container)
 	# inputs: 
 	# 1. widgets array - typically widgets on the page or dynamic panel state
 	# 2. instance of the ruby Page class. It's used to store widgets info in suitable form
 	# workflow: widgets (RP widgets) -> info -> wid_container (Page class instance)
 	widgets.each{|w|
-		if w.HasInteraction and w.GetType.to_s!=DP # active button or area on the screen
+		if w.HasInteraction and w.GetType.to_s!=DP # active delement or area on the screen
 			name=get_name(w)
 			raise "Bad name for #{w.id} footnote #{w.FootnoteNumber}, on page #{wid_container.name}\nName must be '' < name < 15 symb" if name==nil
-			but=Button.new(w.GetHashCode,wid_container.id,w.GetType.to_s,name) 
+			but=DElement.new(w.GetHashCode,wid_container.id,name) 
 			w.Interaction.Events.ToArray.each{|event|
 				if event.EventName=='OnClick' and event.EventDescription!=nil
 					events=event.EventDescription.split("\n") 
@@ -231,7 +291,7 @@ def get_buttons(widgets,wid_container)
 					events.shift # removing 'OnClick:'
 					events.each{|line|
 						if CASE_LINE===line
-							@c=Button::Case.new($1,but)
+							@c=Case.new($1,but)
 							but.add_case(@c)
 						elsif INTERACTION_LINE===line
 							@c.add_interaction($1)
@@ -240,33 +300,29 @@ def get_buttons(widgets,wid_container)
 					} 
 				end #if
 			}		
-			wid_container.add_button(but) 
+			wid_container.add_delement(but) 
 		elsif w.GetType.to_s==DP # dynamic area
 			da=DynamicArea.new(w.GetHashCode,wid_container.id,w.GetType.to_s,w.Name,w.IsVisible)	
 			w.PanelStates.ToArray.each{|ps|
 				da_page=Page.new(ps.GetHashCode,da.id,ps.GetType.to_s,ps.DiagramName,false) 
 				da.add_page(da_page)	
-				get_buttons(ps.Widgets.ToArray,da_page)
+				get_delements(ps.Widgets.ToArray,da_page)
 			}
     else # any other widget
-      #ExpectedElement.new(w.GetHashCode, wid_container.id, w.GetType, get_name(w))
+      ExpectedElement.new(w.GetHashCode, wid_container.id, get_name(w)) unless get_name(w).empty?
     end
 	}
 end
 
 def load_model
-	# workflow: iterate through all pages and create instances of Page, Dynamic Area, Button classes. 
+	# workflow: iterate through all pages and create instances of Page, Dynamic Area, DElement classes. 
 	# Prepare info for future use
 	$log.info 'Load model'
 	pages(@doc).each do |page| 
 		p=Page.new(page.GetHashCode,nil,page.GetType.to_s,page.PackageName,true)	
-		# get inputs from RPPage
-		page.NotesAnnotation.PropertyNames.each{|propName|
-			val=page.NotesAnnotation.GetPropertyValue(propName)
-			p.inputs=val if propName=='Inputs' and val!=''
-		}
-		# get buttons from RPPage		
-		get_buttons(page.Diagram.Widgets.ToArray,p)
+		# get deterministic and various elements from RPPage		
+		get_delements(page.Diagram.Widgets.ToArray,p)
+		get_velements(page)
 	end
 end
 
@@ -277,13 +333,13 @@ def generate_xml
 	# generate states from pages (pages are RPPages+RPDynamicPanel_states)
 	#	
 	Page.all.each{|page|
-		gen_state(@xml,page.id,page.name,page.inputs,page.type,page.type==PAGE, page.buttons.collect{ |b| Element.new(b.type,b.name,'') })	
+		gen_state(@xml,page.id,page.name,page.type,page.type==PAGE, (page.expected_elements + page.velements).uniq)
 	}
 
 	# generate transitions
 	#
 	Page.all.each{|page|
-		if page.buttons.empty?			
+		if page.delements.empty?			
 			if page.main
 				message="Separated page found: #{page.name}(#{page.id})"	
 			else
@@ -295,13 +351,13 @@ def generate_xml
 			next
 		end
 		$log.debug page.name.upcase
-		page.buttons.each{|button|
-			$log.debug "\t"+button.name
+		page.delements.each{|delement|
+			$log.debug "\t"+delement.name
 			# MAIN PROCEDURE
-			# need to find button's target(s), parsing the cases descriptions
+			# need to find delement's target(s), parsing the cases descriptions
 			# each case is potential transition of the resulting FSM
-			raise "Button #{button.name} on Page #{page.name} has no cases - internal error" if button.cases.empty? 
-			button.cases.each{|c|
+			raise "DElement #{delement.name} on Page #{page.name} has no cases - internal error" if delement.cases.empty? 
+			delement.cases.each{|c|
 				$log.debug "\t\t"+c.description
 				# parse_case(case) => returns array [parent_page_id(s),target_page_id,transition_condition,transition_action,transition_internal_state]
 				parse_results=parse_case(c)
@@ -311,12 +367,11 @@ def generate_xml
 				condition=parse_results.pop
 				type=parse_results.pop
 				target_page_id=parse_results.pop
-        element = Element.new(type, button.name, '')
 				descr=(TRANSITION_CONDITION===c.description or TRANSITION_ACTION===c.description or TRANSITION_INTERNAL===c.description or TRANSITION_CHANCE===c.description or TRANSITION_CASE===c.description)? '' : " - #{c.description}"
-				raise "Cant find target State on Page #{page.name} through Button #{button.name}, Case #{c.description}" if target_page_id==nil
-				raise "Cant find source State on Page #{page.name} through Button #{button.name}, Case #{c.description}" if parse_results.empty?
+				raise "Cant find target State on Page #{page.name} through DElement #{delement.name}, Case #{c.description}" if target_page_id==nil
+				raise "Cant find source State on Page #{page.name} through DElement #{delement.name}, Case #{c.description}" if parse_results.empty?
 				parse_results.each{|source_page_id|
-					gen_transition(@xml,"#{source_page_id}-#{target_page_id}",button.name+descr,source_page_id,target_page_id,element,condition,action,internal_state,chance)
+					gen_transition(@xml,"#{source_page_id}-#{target_page_id}",delement.name+descr,source_page_id,target_page_id,[delement],condition,action,internal_state,chance)
 				}
 			}			
 		}
@@ -337,8 +392,8 @@ def parse_case(c)
 	results=[]
 	# find target
 	last_i=c.interactions.last	
-	raise "When finding parent for button #{c.parent.name} got results: #{Page.fnd({:id=>c.parent.parent_id})}" if Page.fnd({:id=>c.parent.parent_id}).length!=1 
-	parent_page=Page.fnd({:id=>c.parent.parent_id}).first # c.parent <-- parent button object
+	raise "When finding parent for delement #{c.parent.name} got results: #{Page.fnd({:id=>c.parent.parent_id})}" if Page.fnd({:id=>c.parent.parent_id}).length!=1 
+	parent_page=Page.fnd({:id=>c.parent.parent_id}).first # c.parent <-- parent delement object
 	main_parent_page=parent_page
 	if not parent_page.main
 		da=DynamicArea.fnd({:id=>parent_page.parent_id}).first
@@ -348,7 +403,7 @@ def parse_case(c)
 	# so parent_page is always main page
 
 	c.interactions.each{|i|
-		location="On page=#{main_parent_page.name}(#{parent_page.name}), button=#{c.parent.name}, case=#{c.description}, interaction=#{i}"
+		location="On page=#{main_parent_page.name}(#{parent_page.name}), delement=#{c.parent.name}, case=#{c.description}, interaction=#{i}"
 		if i.match(',')==nil
 			case
 				when WAIT===i 
@@ -375,7 +430,7 @@ def parse_case(c)
 					end
 				when CLOSE_CUR_W===i
 					if i==last_i
-						$log.info "CLOSE CUR WINDOW found on page #{parent_page.name}, button=#{c.parent.name},case=#{c.description} --> returning parent_page: #{parent_page.name}"
+						$log.info "CLOSE CUR WINDOW found on page #{parent_page.name}, delement=#{c.parent.name},case=#{c.description} --> returning parent_page: #{parent_page.name}"
 						#results.push(main_parent_page.id)
 						raise "Close current window is not supported."
 						break
@@ -408,7 +463,7 @@ def parse_case(c)
 						da_pages=Page.fnd({:parent_id=>areas.first.id})
 						if da_pages.include?(parent_page) # trying to hide SELF
 							results.push(parent_page.id,main_parent_page.id)
-						else # for sure it's a button on the main_parent_page. Assuming that the page that is being hidden in the foreground now
+						else # for sure it's a delement on the main_parent_page. Assuming that the page that is being hidden in the foreground now
 							da_pages.each{|dlg|
 								results.push(dlg.id)
 							}							
@@ -537,6 +592,12 @@ def parse_case(c)
 		end
 	}
 
+	if TRANSITION_TYPE===c.description
+		results.push($1) 
+	else
+		results.push('UnknownActionType')
+	end
+
 	if TRANSITION_CONDITION===c.description
 		results.push($1) 
 	else
@@ -593,10 +654,10 @@ def debug_info2
 	Page.all.each{|p| 
 		$log.debug "#{p.id}\t#{p.name}\t#{p.parent_id}"
 	}
-	$log.debug "BUTTONS"
-	Button.all.each{|b|
+	$log.debug "DELEMENTS"
+	DElement.all.each{|b|
 		$log.debug "#{b.id}\t#{b.name}\t#{b.parent_id}"	
-		$log.debug "\t BUTTON CASES"
+		$log.debug "\t DELEMENT CASES"
 		b.cases.each{|c| $log.debug "\t\t#{c.description}\n#{c.interactions.join("\n")}"}
 	}
 	$log.debug "DYNAREAS"
@@ -607,24 +668,22 @@ end
 
 
 ############################# XML generator related functons #############################
-def gen_state(xml_document,id,node_name,node_inputs,description,node_is_main,elements)
+def gen_state(xml_document,id,node_name,description,node_is_main,elements)
 	state=Element.new("state")
 	state.attributes["id"]=id
 	state.attributes["name"]=node_name
-	state.attributes["inputs"]=node_inputs
 	state.attributes["description"]=description
 	state.attributes["main"]=node_is_main
   elements.each{ |e| 
-    ee = Element.new("expected_element")
+    ee = Element.new("ui_element")
     ee.attributes["type"] = e.type
-    ee.attributes["text"] = e.text
-    ee.attributes["data"] = e.data
+    ee.attributes["text"] = e.name
     state.add_element(ee)
   }
 	xml_document.root.add_element(state)	
 end
 
-def gen_transition(xml_document,id,edge_name,sou,tar,element,condition,action,internal_state,chance)
+def gen_transition(xml_document,id,edge_name,sou,tar,elements,condition,action,internal_state,chance)
 	transition=Element.new("transition")
 	transition.attributes["id"]=id
 	transition.attributes["name"]=edge_name
@@ -634,11 +693,12 @@ def gen_transition(xml_document,id,edge_name,sou,tar,element,condition,action,in
 	transition.attributes["action"]=action
 	transition.attributes["internalState"]=internal_state
 	transition.attributes["chance"]=chance
-  e = Element.new("element")
-  e.attributes["type"] = element.type
-  e.attributes["text"] = element.text
-  e.attributes["data"] = element.data
-  transition.add_element(e)
+  elements.each{ |e| 
+    ee = Element.new("ui_element")
+    ee.attributes["type"] = e.type
+    ee.attributes["text"] = e.name
+    transition.add_element(ee)
+  }
 	xml_document.root.add_element(transition)	
 end
 

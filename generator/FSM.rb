@@ -10,12 +10,11 @@ class FSM
 	DEFAULT_WEIGHT=1
 
   class Element
-    attr_accessor :text, :type, :data
+    attr_accessor :text, :type
 
-    def initialize(type, text, data = '')
-      @type = nil
+    def initialize(type, text)
+      @type = type
       @text = text
-      @data = data
     end
   end
 	

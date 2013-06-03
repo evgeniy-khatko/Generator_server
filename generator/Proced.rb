@@ -35,7 +35,7 @@ module Proced
 						raise AppError.new("XML model has inconsistent state: : name=#{name}, id=#{id}")						
 					end					
           elements = []
-          state.elements.each{ |ee| elements << Element.new( ee.attributes["type"], ee.attributes["text"], ee.attributes["data"] ) }
+          state.elements.each{ |ee| elements << UIElement.new( ee.attributes["type"], ee.attributes["text"] ) }
 					model.new_state(id,name,inputs,description,stateIsMain,elements)
 		}
 		# init model transitions
@@ -55,9 +55,9 @@ module Proced
 						e("XML model has inconsistent transition(s)")
 						raise AppError.new("XML model has inconsistent transition: name=#{name}, id=#{id}, source=#{sou}, target=#{tar}")
 					end
-          element = nil
-          transition.elements.each{ |e| elements = Element.new(e.type, e.text, e.data) }
-					tr = model.new_transition(id,name,source,target,condition,action,chance,internalState,element)
+          elements = []
+          transition.elements.each{ |e| elements << UIElement.new(e.type, e.text) }
+					tr = model.new_transition(id,name,source,target,condition,action,chance,internalState,elements)
 		}
 
 		# need to decompose FSM: to split all states with inputs into 2 - state and state_INPUTDONE		
@@ -66,7 +66,7 @@ module Proced
 			if state.has_inputs				
 				inputs=state.inputs
 				state.inputs=nil
-				state_done=model.new_state(state.id+STATE_IN_DONE_ID,state.name+STATE_IN_DONE_NAME,nil,'INPUT was DONE',false)
+				state_done=model.new_state(state.id+STATE_IN_DONE_ID,state.name+STATE_IN_DONE_NAME,nil,'INPUT was DONE',false,[])
 				d("#{state.name}(#{state.id}) -> #{state.name}(#{state.id}), #{state_done.name}(#{state_done.id})")
 				# splitting into 2 states:
 				model.transitions_from(state).each{|t|
@@ -76,11 +76,9 @@ module Proced
 				# connecting 2 splitted states with inputs:
 				inputs.split("\n").each{|input|
 					if input!=''
-						tr = model.new_transition(state.id+'-'+state_done.id,TRANSITION_IN_DONE_NAME,state,state_done,nil,input,nil,nil,Alphabeth::ENTER)
-            params = input.split(";")
-            values = []
-            params.each{ |p| values << p.split("=")[1].strip }
-            tr.user_action = "#{Alphabeth::ENTER+'_to_state_'+state.name.gsub(/\s+/,"_")}(#{values.join(",")})"
+            elements = []
+            transition.elements.each{ |e| elements << UIElement.new(e.type, e.text) }
+						tr = model.new_transition(state.id+'-'+state_done.id,TRANSITION_IN_DONE_NAME,state,state_done,nil,input,nil,nil,elements)
 						d "Added transition name=#{input}"
 					end
 				}
