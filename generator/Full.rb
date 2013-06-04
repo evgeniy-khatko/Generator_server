@@ -28,7 +28,7 @@ module Full
 		current_test=Test.new(fsm.current_state.name)
     current_test.new_step(current_transition.source.name,
                           current_transition.target.name,
-                          current_transition.test_info
+                          current_transition.test_info + current_transition.target.expected
                          )
 		fsm.make_transition(current_transition) # move fsm to the 2nd state, respecting conditions and actions if extended mode		
 		covered=[current_transition]		
@@ -97,19 +97,20 @@ module Full
 				raise AppError.new("Could not reach 100% coverage. Try LOGGING ('-l') -> log.txt. Check model parameters") 
 			end
 			# add tests
-			if (fsm.current_state.main and current_test.steps.length > AVERAGE_TEST_LENGTH) or current_transition.has_internal_state
+			#if (fsm.current_state.main and current_test.steps.length > AVERAGE_TEST_LENGTH) or current_transition.has_internal_state
+			if current_transition.has_internal_state
         current_test.new_step(current_transition.source.name,
                               current_transition.target.name,
-                              current_transition.test_info
+                              current_transition.test_info + current_transition.target.expected
                              )
 				testsuite.add_test(current_test)
-				current_test=Test.new(fsm.current_state.name)
+				current_test=Test.new(current_transition.internal_state)
       else
 				condition=(current_transition.has_condition)? current_transition.condition : ''
 				#state=(fsm.current_state.name==fsm.start_state)? '' : fsm.current_state.name
         current_test.new_step(current_transition.source.name,
                               current_transition.target.name,
-                              current_transition.test_info
+                              current_transition.test_info + current_transition.target.expected
                              )
 				if coverage >= 1
 					testsuite.add_test(current_test)

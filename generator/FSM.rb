@@ -30,11 +30,15 @@ class FSM
 		end
 
     def eq_classes
-      self.test_info.collect(&:eq_class).uniq
+      self.test_info.collect(&:eq_class).compact
     end
 
     def test_info_with_eq_class(eq_class)
       self.test_info.select{ |ti| ti.eq_class == eq_class }
+    end
+
+    def expected
+      self.test_info.select{ |ti| ti.expected? }.compact
     end
 	end
 
@@ -65,6 +69,15 @@ class FSM
 			info+=internal+act+cond+chance
 			return info
 		end
+
+    def has_internal_state
+      !self.test_info.collect(&:internal_check).compact.empty?
+    end
+    
+    def internal_state
+      self.test_info.collect(&:internal_check).compact.join("; ")
+    end
+
 	end	
 	
 	def initialize
@@ -200,15 +213,13 @@ class FSM
 		definition="#{t.source.id} -> #{t.target.id}"
 		condition=(t.has_condition)? " [#{t.condition}]" : ''
 		action=(t.has_action)? " /#{t.action}/" : ''
-		internalState=(t.has_internal_state)? " {#{t.internal_state}}" : ''
-		type=" %#{t.type}"
 		color="red"
 		if is_covered and not is_next_transition
 			color="lightseagreen"
 		elsif is_next_transition
 			color="orange"
 		end
-		options=' [label="'+t.name+condition+action+internalState+type+'",color="'+color+'",fontname='+fontname+',fontsize='+fontsize+'];'
+		options=' [label="'+t.name+condition+action+'",color="'+color+'",fontname='+fontname+',fontsize='+fontsize+'];'
 		return definition+options
 	end
 

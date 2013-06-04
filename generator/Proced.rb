@@ -77,7 +77,7 @@ module Proced
 		# need to decompose FSM: to split all states with inputs into 2 - state and state_INPUTDONE		
 		i("Decompose")
 		model.states.each{|state|
-			if !state.eq_classes.empty? and !state.decomposed
+			if !state.eq_classes.empty?# and state.decomposed == false
         state.decomposed = true        
 				state_done=model.new_state(state.id+STATE_IN_DONE_ID,state.name+STATE_IN_DONE_NAME,'INPUT was DONE',false,[])
 				d("#{state.name}(#{state.id}) -> #{state.name}(#{state.id}), #{state_done.name}(#{state_done.id})")
@@ -87,9 +87,9 @@ module Proced
 					d("changed source of #{t.name} to #{state_done.name}")
 				}
 				# connecting 2 splitted states with inputs:
-        state.eq_classes{ |eq_class|
+        state.eq_classes.each{ |eq_class|
             test_info = state.test_info_with_eq_class( eq_class )
-						tr = model.new_transition(state.id+'-'+state_done.id,eq_class,state,state_done,nil,test_info.collect(&:to_action).join(";"),nil,test_info)
+						tr = model.new_transition(state.id+'-'+state_done.id,eq_class,state,state_done,nil,test_info.collect(&:to_action).compact.join(";"),nil,test_info)
 						d "Added transition name=#{eq_class}"
 				}
 			end

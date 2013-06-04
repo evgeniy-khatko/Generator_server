@@ -1,4 +1,5 @@
 class TestInfo 
+  START = 'start_application'
   SELECT = 'select'
   ENTER = 'enter'
   CHECK = 'check'
@@ -9,7 +10,7 @@ class TestInfo
   SCROLL_DOWN = 'scroll_down'
   SCROLL_UP = 'scroll_up'
   EXIST = 'exist'
-  DETERMINISTIC = [PRESS, LONG_PRESS, SWIPE_LEFT, SWIPE_RIGHT, SCROLL_DOWN, SCROLL_UP]
+  DETERMINISTIC = [PRESS, LONG_PRESS, SWIPE_LEFT, SWIPE_RIGHT, SCROLL_DOWN, SCROLL_UP, START]
   VARIOUS = [SELECT, ENTER, CHECK]
   EXPECTED = [EXIST]
   DEFAULT = PRESS
@@ -41,15 +42,15 @@ class TestInfo
   end
 
   def deterministic?
-    DETERMINISTIC.include? self.type
+    DETERMINISTIC.include? self.action
   end
 
   def various?
-    VARIOUS.include? self.type
+    VARIOUS.include? self.action
   end
 
   def expected?
-    EXPECTED.include? self.type
+    EXPECTED.include? self.action
   end
 
   def self.objects
@@ -57,7 +58,7 @@ class TestInfo
   end
 
   def to_action
-    "#{self.locator}=#{self.data}"
+    "#{self.locator}=#{self.data.gsub(/"/,"'")}"
   end
 
   private

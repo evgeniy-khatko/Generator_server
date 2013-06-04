@@ -27,21 +27,16 @@ class Testsuite
 				s=Element.new("step")
 				s.attributes["from"]=step.from
 				s.attributes["to"]=step.to
-				s.attributes["params"]=step.params
-				s.attributes["condition"]=step.condition
-				s.attributes["internal_check"]=step.internal_check
-        e = Element.new('element')
-        e.attributes["type"] = step.element.type
-        e.attributes["text"] = step.element.text
-        e.attributes["data"] = step.element.data
-        step.expected_elements.each{ |ee| 
-          e = Element.new('expected_element')
-          e.attributes["type"] = step.element.type
-          e.attributes["text"] = step.element.text
-          e.attributes["data"] = step.element.data
-          s.add_element(ee)
+        step.test_info.each{ |info_item|
+          i = Element.new("step_info")
+          i.attributes["locator"] = info_item.locator
+          i.attributes["index"] = info_item.index
+          i.attributes["action"] = info_item.action
+          i.attributes["data"] = info_item.data
+          i.attributes["eq_class"] = info_item.eq_class
+          i.attributes["internal_check"] = info_item.internal_check
+          s.add_element(i)
         }
-        s.add_element(e)
 				t.add_element(s)
 			}
 			out.root.add_element(t)
