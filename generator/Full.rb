@@ -28,11 +28,7 @@ module Full
 		current_test=Test.new(fsm.current_state.name)
     current_test.new_step(current_transition.source.name,
                           current_transition.target.name,
-                          current_transition.element,
-                          (current_transition.has_action)? current_transition.action : '', 
-                          (current_transition.has_condition)? current_transition.condition : '', 
-                          current_transition.target.elements,
-                          (current_transition.has_internal_state)? current_transition.internal_state : '', 
+                          current_transition.test_info
                          )
 		fsm.make_transition(current_transition) # move fsm to the 2nd state, respecting conditions and actions if extended mode		
 		covered=[current_transition]		
@@ -102,26 +98,18 @@ module Full
 			end
 			# add tests
 			if (fsm.current_state.main and current_test.steps.length > AVERAGE_TEST_LENGTH) or current_transition.has_internal_state
-				current_test.new_step(current_transition.source.name,
+        current_test.new_step(current_transition.source.name,
                               current_transition.target.name,
-                              current_transition.element,
-                              (current_transition.has_action)? current_transition.action : '', 
-                              (current_transition.has_condition)? current_transition.condition : '', 
-                              current_transition.target.elements,
-                              (current_transition.has_internal_state)? current_transition.internal_state : '', 
+                              current_transition.test_info
                              )
 				testsuite.add_test(current_test)
 				current_test=Test.new(fsm.current_state.name)
       else
 				condition=(current_transition.has_condition)? current_transition.condition : ''
 				#state=(fsm.current_state.name==fsm.start_state)? '' : fsm.current_state.name
-				current_test.new_step(current_transition.source.name,
+        current_test.new_step(current_transition.source.name,
                               current_transition.target.name,
-                              current_transition.element,
-                              (current_transition.has_action)? current_transition.action : '', 
-                              (current_transition.has_condition)? current_transition.condition : '', 
-                              current_transition.target.elements,
-                              (current_transition.has_internal_state)? current_transition.internal_state : '', 
+                              current_transition.test_info
                              )
 				if coverage >= 1
 					testsuite.add_test(current_test)

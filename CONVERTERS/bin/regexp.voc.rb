@@ -36,6 +36,6 @@ COLLAPSE=Regexp.new('^Collapse .+')
 # Set text on widget pwd equal to "qwerty"
 # Set is checked of 333 equal to true
 # Set selected option of 111111 equal to "1"
-INPUT=Regexp.new('^Set text on widget (.+) equal to (.+)$')
-SELECT=Regexp.new('^Set selected option of (.+) equal to (.+)$')
-CHECK=Regexp.new('^Set is checked of (.+) equal to (.+)$')
+INPUT=Regexp.new('\s+Set text on widget (.+) equal to (.+)$')
+SELECT=Regexp.new('\s+Set selected option of (.+) equal to (.+)$')
+CHECK=Regexp.new('\s+Set is checked of (.+) equal to (.+)$')

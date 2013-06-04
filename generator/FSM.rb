@@ -1,6 +1,7 @@
 require "Log.rb"                                     
 require "Context.rb"
 require "InternalError.rb"
+require "UIElement.rb"
 
 include Log
 
@@ -9,28 +10,18 @@ class FSM
 	attr_accessor :transitions, :states, :fsmContext, :current_state, :start_state, :temporary_deleted
 	DEFAULT_WEIGHT=1
 
-  class Element
-    attr_accessor :text, :type
-
-    def initialize(type, text)
-      @type = type
-      @text = text
-    end
-  end
-	
 	class State
-		attr_reader :id, :name, :description, :main, :elements
-		attr_accessor :in, :out, :has_description, :has_inputs, :inputs
+		attr_reader :id, :name, :description, :main, :test_info
+		attr_accessor :in, :out, :has_description, :decomposed
 		
-		def initialize(id,name,inputs,desc,main,elements)
+		def initialize(id,name,desc,main,test_info)
 			@id=id
 			@name=name
 			@description=desc
-			@inputs=inputs
 			@main=main
 			@has_description=(desc==nil)? false : true
-			@has_inputs=(inputs==nil or inputs=='')? false : true
-      @elements=elements
+      @test_info = test_info
+      @decomposed = false
 		end
 		
 		def info
@@ -38,27 +29,32 @@ class FSM
 			info="[#{@id}] "+@name+": "+" main=#{@main}"+" #{desc}"
 			return info
 		end
+
+    def eq_classes
+      self.test_info.collect(&:eq_class).uniq
+    end
+
+    def test_info_with_eq_class(eq_class)
+      self.test_info.select{ |ti| ti.eq_class == eq_class }
+    end
 	end
 
 	class Transition
-		attr_reader :id, :name, :chance, :internal_state
-		attr_accessor :has_condition, :has_action, :weight, :has_internal_state, :source, :target, :condition, :action, :element
+		attr_reader :id, :name, :chance
+		attr_accessor :has_condition, :has_action, :weight, :source, :target, :condition, :action, :test_info
 
-		def initialize(id,name,source,target,condition,action,chance,internalState,element)
+		def initialize(id,name,source,target,condition,action,chance,internalState,test_info)
 			@id=id
 			@name=name
 			@source=source
 			@target=target
 			@condition=condition
-			@internal_state=internalState
 			@has_condition=(condition==nil)? false : true
 			@action=action
 			@has_action=(action==nil)? false : true
 			@chance=(chance==nil)? nil : chance.to_f
 			@weight=(chance==nil)? DEFAULT_WEIGHT : DEFAULT_WEIGHT/@chance
-			@internal_state=internalState
-			@has_internal_state=(internalState==nil)? false : true
-      @element = element
+      @test_info = test_info
 		end
 		
 		def info
@@ -118,14 +114,14 @@ class FSM
 		return nil
 	end
 
-	def new_state(id,name,inputs,desc,main,elements=[])
-		new_state=State.new(id,name,inputs,desc,main,elements)
+	def new_state(id,name,desc,main,elements=[])
+		new_state=State.new(id,name,desc,main,elements)
 		@states << new_state
 		return new_state
 	end
 	
-	def new_transition(id,name,source,target,condition,action,chance,internalState,type)
-		new_transition=Transition.new(id,name,source,target,condition,action,chance,internalState,type)
+	def new_transition(id,name,source,target,condition,action,chance,elements)
+		new_transition=Transition.new(id,name,source,target,condition,action,chance,elements)
 		@transitions << new_transition
 		return new_transition
 	end

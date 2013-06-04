@@ -6,20 +6,16 @@ class Test
 		end
 
 		class Step
-			attr_accessor :from, :to, :element, :params, :condition, :expected_elements, :internal_check
+			attr_accessor :from, :to, :test_info
 
-			def initialize(from,to,element,params='',condition='',expected_elements='',internal_check='')
+			def initialize(from,to,test_info)
 				@from=from
 				@to=to
-        @element = element
-        @condition = condition
-        @expected_elements = expected_elements
-        @internal_check = internal_check
-        @params = params
+        @test_info = test_info
 			end
 		end
 		
-		def new_step(from,to,element,params,condition,expected_elements,internal_check)
-			@steps << Step.new(from,to,element,params,condition,expected_elements,internal_check)
+		def new_step(from,to,test_info)
+			@steps << Step.new(from,to,test_info)
 		end
 end

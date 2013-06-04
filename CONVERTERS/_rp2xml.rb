@@ -4,6 +4,7 @@ require 'logger'
 require 'bin/Axure.Document'
 require 'bin/types.voc.rb'
 require 'bin/regexp.voc.rb'
+require File.dirname(__FILE__)+'../generator/TestInfo.rb'
 include Axure
 include System
 include System::Collections::Generic
@@ -79,66 +80,29 @@ class Page < RP
 		super(id,parent_id,type,name)
 		@main=main
     @cases = []
-    @delements = []
-    @velements = []
-    @expected_elements = []
+    @active_elements = []
 	end
   
-	def add_delement(obj)
-		@delements.push(obj)
+	def add_active_element(obj)
+		@active_elements.push(obj)
 	end
 
-	def delements
-		return DElement.fnd({:parent_id=>self.id})
-	end
-
-	def velements
-		return VElement.fnd({:parent_id=>self.id})
+	def active_elements
+		return ActiveElement.fnd({:parent_id=>self.id})
 	end
 
 	def add_case(obj)
 		@cases.push(obj)
 	end
 
-	def expected_elements
-		return ExpectedElement.fnd({:parent_id=>self.id})
-	end
-
 private
 	@objects=[]
 end
 
-class VElement < RP
-	attr_accessor :cases, :type, :eq_class, :action, :data
-	def initialize(id,parent_id,name,eq_class, action, data)
-    @type = VARIOUS
-		super(id,parent_id,VARIOUS,name)
-		@cases=[]
-    @eq_class = eq_class
-    @action = action
-    @data = data
-	end
-
-	def add_case(obj)
-		@cases.push(obj)
-	end
-
-	def parent
-		parents=Page.fnd({:id=>self.parent_id})
-		raise "VElement #{self.name}(#{self.id}) has more then 1 parent: #{parents.collect{|p| p.name}.join(',')}" if parents.length>1
-		return parents.first
-	end
-
-	
-private
-	@objects=[]
-end
-
-class DElement < RP
-	attr_accessor :cases, :type
+class ActiveElement < RP
+	attr_accessor :cases
 	def initialize(id,parent_id,name)
-    @type = DETERMINISTIC
-		super(id,parent_id,DETERMINISTIC,name)
+		super(id,parent_id,'ActiveElement',name)
 		@cases=[]
 	end
 
@@ -148,23 +112,11 @@ class DElement < RP
 
 	def parent
 		parents=Page.fnd({:id=>self.parent_id})
-		raise "DElement #{self.name}(#{self.id}) has more then 1 parent: #{parents.collect{|p| p.name}.join(',')}" if parents.length>1
+		raise "ActiveElement #{self.name}(#{self.id}) has more then 1 parent: #{parents.collect{|p| p.name}.join(',')}" if parents.length>1
 		return parents.first
 	end
 
 	
-private
-	@objects=[]
-end
-
-class ExpectedElement < RP
-	attr_accessor :type
-
-  def initialize(id, parent_id, name)
-    @type = EXPECTED
-    super(id, parent_id, EXPECTED, name)
-  end
-
 private
 	@objects=[]
 end
@@ -245,7 +197,7 @@ end
 def get_velements(page)
   if page.HasInteraction 
     page.Interaction.Events.ToArray.each{|event|
-      if event.EventName=='OnLoad' and event.EventDescription!=nil
+      if event.EventName=='OnPageLoad' and event.EventDescription!=nil
         events=event.EventDescription.split("\n") 
         events.shift # removing 'OnLoad:'
         current_eq_class = nil
@@ -253,13 +205,25 @@ def get_velements(page)
           if CASE_LINE===line
             current_eq_class = line
           elsif INPUT===line
-            velement = VElement.new($1,page.id,$1,current_eq_class,'INPUT',data)
+            velement = TestInfo.new($1 + page.GetHashCode.to_s, page.GetHashCode)
+            velement.locator = $1
+            velement.action = TestInfo::ENTER
+            velement.data = $2            
           elsif SELECT===line
-            velement = VElement.new($1,page.id,$1,current_eq_class,'SELECT',data)
+            velement = TestInfo.new($1 + page.GetHashCode.to_s, page.GetHashCode)
+            velement.locator = $1
+            velement.action = TestInfo::SELECT
+            velement.data = $2            
           elsif CHECK===line
-            velement = VElement.new($1,page.id,$1,current_eq_class,'CHECK',data)
+            velement = TestInfo.new($1 + page.GetHashCode.to_s, page.GetHashCode)
+            velement.locator = $1
+            velement.action = TestInfo::CHECK
+            velement.data = $2            
           else
-            raise "unknown inputs type on page #{page.name}, case: #{line}"
+            raise "unknown input type on page #{page.PackageName}, case: #{line}"
+          end
+          if TRANSITION_INTERNAL === line
+            velement.internal_check = $1
           end
         } 
       end #if
@@ -267,16 +231,18 @@ def get_velements(page)
   end
 end
 
-def get_delements(widgets,wid_container)
+def get_active_elements(widgets,wid_container)
 	# inputs: 
 	# 1. widgets array - typically widgets on the page or dynamic panel state
 	# 2. instance of the ruby Page class. It's used to store widgets info in suitable form
 	# workflow: widgets (RP widgets) -> info -> wid_container (Page class instance)
 	widgets.each{|w|
-		if w.HasInteraction and w.GetType.to_s!=DP # active delement or area on the screen
+		if w.HasInteraction and w.GetType.to_s!=DP # active active_element or area on the screen
 			name=get_name(w)
 			raise "Bad name for #{w.id} footnote #{w.FootnoteNumber}, on page #{wid_container.name}\nName must be '' < name < 15 symb" if name==nil
-			but=DElement.new(w.GetHashCode,wid_container.id,name) 
+			but=ActiveElement.new(w.GetHashCode,wid_container.id,name) 
+      delement = TestInfo.new(w.GetHashCode,wid_container.id)
+      delement.locator = name
 			w.Interaction.Events.ToArray.each{|event|
 				if event.EventName=='OnClick' and event.EventDescription!=nil
 					events=event.EventDescription.split("\n") 
@@ -293,6 +259,16 @@ def get_delements(widgets,wid_container)
 						if CASE_LINE===line
 							@c=Case.new($1,but)
 							but.add_case(@c)
+              if TRANSITION_TYPE === line
+                raise "UNKNOWN USER ACTION #{$1.strip} on page #{wid_container.name}, case #{line}" unless TestInfo::DETERMINISTIC.include? $1.strip 
+                delement.action = $1.strip
+              else
+                delement.action = TestInfo::DEFAULT
+                puts "Default user action was set on page #{wid_container.name} for case #{line}"
+              end
+              if TRANSITION_INTERNAL === line
+                delement.internal_check = $1.strip
+              end
 						elsif INTERACTION_LINE===line
 							@c.add_interaction($1)
 						end
@@ -300,28 +276,32 @@ def get_delements(widgets,wid_container)
 					} 
 				end #if
 			}		
-			wid_container.add_delement(but) 
+			wid_container.add_active_element(but) 
 		elsif w.GetType.to_s==DP # dynamic area
 			da=DynamicArea.new(w.GetHashCode,wid_container.id,w.GetType.to_s,w.Name,w.IsVisible)	
 			w.PanelStates.ToArray.each{|ps|
 				da_page=Page.new(ps.GetHashCode,da.id,ps.GetType.to_s,ps.DiagramName,false) 
 				da.add_page(da_page)	
-				get_delements(ps.Widgets.ToArray,da_page)
+				get_active_elements(ps.Widgets.ToArray,da_page)
 			}
     else # any other widget
-      ExpectedElement.new(w.GetHashCode, wid_container.id, get_name(w)) unless get_name(w).empty?
+      if get_name(w) =~ /[a-zA-z]+/ 
+        ee = TestInfo.new(w.GetHashCode,wid_container.id)
+        ee.locator = get_name(w)
+        ee.action = TestInfo::EXIST
+      end
     end
 	}
 end
 
 def load_model
-	# workflow: iterate through all pages and create instances of Page, Dynamic Area, DElement classes. 
+	# workflow: iterate through all pages and create instances of Page, Dynamic Area, ActiveElement classes. 
 	# Prepare info for future use
 	$log.info 'Load model'
 	pages(@doc).each do |page| 
 		p=Page.new(page.GetHashCode,nil,page.GetType.to_s,page.PackageName,true)	
 		# get deterministic and various elements from RPPage		
-		get_delements(page.Diagram.Widgets.ToArray,p)
+		get_active_elements(page.Diagram.Widgets.ToArray,p)
 		get_velements(page)
 	end
 end
@@ -333,13 +313,13 @@ def generate_xml
 	# generate states from pages (pages are RPPages+RPDynamicPanel_states)
 	#	
 	Page.all.each{|page|
-		gen_state(@xml,page.id,page.name,page.type,page.type==PAGE, (page.expected_elements + page.velements).uniq)
+		gen_state(@xml,page.id,page.name,page.type,page.type==PAGE, TestInfo.fnd_by_parent(page.id))
 	}
 
 	# generate transitions
 	#
 	Page.all.each{|page|
-		if page.delements.empty?			
+		if page.active_elements.empty?			
 			if page.main
 				message="Separated page found: #{page.name}(#{page.id})"	
 			else
@@ -351,27 +331,25 @@ def generate_xml
 			next
 		end
 		$log.debug page.name.upcase
-		page.delements.each{|delement|
-			$log.debug "\t"+delement.name
+		page.active_elements.each{|active_element|
+			$log.debug "\t"+active_element.name
 			# MAIN PROCEDURE
-			# need to find delement's target(s), parsing the cases descriptions
+			# need to find active_element's target(s), parsing the cases descriptions
 			# each case is potential transition of the resulting FSM
-			raise "DElement #{delement.name} on Page #{page.name} has no cases - internal error" if delement.cases.empty? 
-			delement.cases.each{|c|
+			raise "ActiveElement #{active_element.name} on Page #{page.name} has no cases - internal error" if active_element.cases.empty? 
+			active_element.cases.each{|c|
 				$log.debug "\t\t"+c.description
 				# parse_case(case) => returns array [parent_page_id(s),target_page_id,transition_condition,transition_action,transition_internal_state]
 				parse_results=parse_case(c)
 				chance=parse_results.pop
-				internal_state=parse_results.pop
 				action=parse_results.pop
 				condition=parse_results.pop
-				type=parse_results.pop
 				target_page_id=parse_results.pop
 				descr=(TRANSITION_CONDITION===c.description or TRANSITION_ACTION===c.description or TRANSITION_INTERNAL===c.description or TRANSITION_CHANCE===c.description or TRANSITION_CASE===c.description)? '' : " - #{c.description}"
-				raise "Cant find target State on Page #{page.name} through DElement #{delement.name}, Case #{c.description}" if target_page_id==nil
-				raise "Cant find source State on Page #{page.name} through DElement #{delement.name}, Case #{c.description}" if parse_results.empty?
+				raise "Cant find target State on Page #{page.name} through ActiveElement #{active_element.name}, Case #{c.description}" if target_page_id==nil
+				raise "Cant find source State on Page #{page.name} through ActiveElement #{active_element.name}, Case #{c.description}" if parse_results.empty?
 				parse_results.each{|source_page_id|
-					gen_transition(@xml,"#{source_page_id}-#{target_page_id}",delement.name+descr,source_page_id,target_page_id,[delement],condition,action,internal_state,chance)
+					gen_transition(@xml,"#{source_page_id}-#{target_page_id}",active_element.name+descr,source_page_id,target_page_id,condition,action,chance,TestInfo.fnd_by_id(active_element.id))
 				}
 			}			
 		}
@@ -392,8 +370,8 @@ def parse_case(c)
 	results=[]
 	# find target
 	last_i=c.interactions.last	
-	raise "When finding parent for delement #{c.parent.name} got results: #{Page.fnd({:id=>c.parent.parent_id})}" if Page.fnd({:id=>c.parent.parent_id}).length!=1 
-	parent_page=Page.fnd({:id=>c.parent.parent_id}).first # c.parent <-- parent delement object
+	raise "When finding parent for active_element #{c.parent.name} got results: #{Page.fnd({:id=>c.parent.parent_id})}" if Page.fnd({:id=>c.parent.parent_id}).length!=1 
+	parent_page=Page.fnd({:id=>c.parent.parent_id}).first # c.parent <-- parent active_element object
 	main_parent_page=parent_page
 	if not parent_page.main
 		da=DynamicArea.fnd({:id=>parent_page.parent_id}).first
@@ -403,7 +381,7 @@ def parse_case(c)
 	# so parent_page is always main page
 
 	c.interactions.each{|i|
-		location="On page=#{main_parent_page.name}(#{parent_page.name}), delement=#{c.parent.name}, case=#{c.description}, interaction=#{i}"
+		location="On page=#{main_parent_page.name}(#{parent_page.name}), active_element=#{c.parent.name}, case=#{c.description}, interaction=#{i}"
 		if i.match(',')==nil
 			case
 				when WAIT===i 
@@ -430,7 +408,7 @@ def parse_case(c)
 					end
 				when CLOSE_CUR_W===i
 					if i==last_i
-						$log.info "CLOSE CUR WINDOW found on page #{parent_page.name}, delement=#{c.parent.name},case=#{c.description} --> returning parent_page: #{parent_page.name}"
+						$log.info "CLOSE CUR WINDOW found on page #{parent_page.name}, active_element=#{c.parent.name},case=#{c.description} --> returning parent_page: #{parent_page.name}"
 						#results.push(main_parent_page.id)
 						raise "Close current window is not supported."
 						break
@@ -463,7 +441,7 @@ def parse_case(c)
 						da_pages=Page.fnd({:parent_id=>areas.first.id})
 						if da_pages.include?(parent_page) # trying to hide SELF
 							results.push(parent_page.id,main_parent_page.id)
-						else # for sure it's a delement on the main_parent_page. Assuming that the page that is being hidden in the foreground now
+						else # for sure it's a active_element on the main_parent_page. Assuming that the page that is being hidden in the foreground now
 							da_pages.each{|dlg|
 								results.push(dlg.id)
 							}							
@@ -592,12 +570,6 @@ def parse_case(c)
 		end
 	}
 
-	if TRANSITION_TYPE===c.description
-		results.push($1) 
-	else
-		results.push('UnknownActionType')
-	end
-
 	if TRANSITION_CONDITION===c.description
 		results.push($1) 
 	else
@@ -605,12 +577,6 @@ def parse_case(c)
 	end
 
 	if TRANSITION_ACTION===c.description
-		results.push($1) 
-	else
-		results.push(nil)
-	end
-
-	if TRANSITION_INTERNAL===c.description
 		results.push($1) 
 	else
 		results.push(nil)
@@ -655,7 +621,7 @@ def debug_info2
 		$log.debug "#{p.id}\t#{p.name}\t#{p.parent_id}"
 	}
 	$log.debug "DELEMENTS"
-	DElement.all.each{|b|
+	ActiveElement.all.each{|b|
 		$log.debug "#{b.id}\t#{b.name}\t#{b.parent_id}"	
 		$log.debug "\t DELEMENT CASES"
 		b.cases.each{|c| $log.debug "\t\t#{c.description}\n#{c.interactions.join("\n")}"}
@@ -675,15 +641,19 @@ def gen_state(xml_document,id,node_name,description,node_is_main,elements)
 	state.attributes["description"]=description
 	state.attributes["main"]=node_is_main
   elements.each{ |e| 
-    ee = Element.new("ui_element")
-    ee.attributes["type"] = e.type
-    ee.attributes["text"] = e.name
+    ee = Element.new("test_info")
+    ee.attributes["locator"] = e.locator
+    ee.attributes["action"] = e.action
+    ee.attributes["eq_class"] = e.eq_class
+    ee.attributes["data"] = e.data
+    ee.attributes["index"] = e.index
+    ee.attributes["internal_check"] = e.internal_check
     state.add_element(ee)
   }
 	xml_document.root.add_element(state)	
 end
 
-def gen_transition(xml_document,id,edge_name,sou,tar,elements,condition,action,internal_state,chance)
+def gen_transition(xml_document,id,edge_name,sou,tar,condition,action,chance,elements)
 	transition=Element.new("transition")
 	transition.attributes["id"]=id
 	transition.attributes["name"]=edge_name
@@ -691,12 +661,15 @@ def gen_transition(xml_document,id,edge_name,sou,tar,elements,condition,action,i
 	transition.attributes["target"]=tar
 	transition.attributes["condition"]=condition
 	transition.attributes["action"]=action
-	transition.attributes["internalState"]=internal_state
 	transition.attributes["chance"]=chance
   elements.each{ |e| 
-    ee = Element.new("ui_element")
-    ee.attributes["type"] = e.type
-    ee.attributes["text"] = e.name
+    ee = Element.new("test_info")
+    ee.attributes["locator"] = e.locator
+    ee.attributes["action"] = e.action
+    ee.attributes["eq_class"] = e.eq_class
+    ee.attributes["data"] = e.data
+    ee.attributes["index"] = e.index
+    ee.attributes["internal_check"] = e.internal_check
     transition.add_element(ee)
   }
 	xml_document.root.add_element(transition)	
