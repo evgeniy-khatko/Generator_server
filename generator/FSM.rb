@@ -1,7 +1,6 @@
 require "Log.rb"                                     
 require "Context.rb"
 require "InternalError.rb"
-require "UIElement.rb"
 
 include Log
 
@@ -43,7 +42,7 @@ class FSM
 		attr_reader :id, :name, :chance
 		attr_accessor :has_condition, :has_action, :weight, :source, :target, :condition, :action, :test_info
 
-		def initialize(id,name,source,target,condition,action,chance,internalState,test_info)
+		def initialize(id,name,source,target,condition,action,chance,test_info)
 			@id=id
 			@name=name
 			@source=source

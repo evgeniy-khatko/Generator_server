@@ -4,6 +4,7 @@ require "FSM.rb"
 require "Log.rb"
 require "Helper.rb"
 require "Alphabeth.rb"
+require "TestInfo.rb"
 include REXML
 include Log
 include Helper
@@ -54,7 +55,7 @@ module Proced
 					action=transition.attributes["action"]
 					condition=transition.attributes["condition"]
 					chance=transition.attributes["chance"]
-					if(id==nil or source==nil or target==nil or type==nil)
+					if(id==nil or source==nil or target==nil)
 						sou=(source==nil)? '' : source.name
 						tar=(target==nil)? '' : target.name
 						e("XML model has inconsistent transition(s)")
