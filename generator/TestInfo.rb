@@ -3,6 +3,7 @@ class TestInfo
   SELECT = 'select'
   ENTER = 'enter'
   CHECK = 'check'
+  CHOOSE = 'choose'
   PRESS = 'press'
   LONG_PRESS = 'long_press'
   SWIPE_LEFT = 'swipe_left'
@@ -11,7 +12,7 @@ class TestInfo
   SCROLL_UP = 'scroll_up'
   EXIST = 'exist'
   DETERMINISTIC = [PRESS, LONG_PRESS, SWIPE_LEFT, SWIPE_RIGHT, SCROLL_DOWN, SCROLL_UP, START]
-  VARIOUS = [SELECT, ENTER, CHECK]
+  VARIOUS = [SELECT, ENTER, CHECK, CHOOSE]
   EXPECTED = [EXIST]
   DEFAULT = PRESS
 

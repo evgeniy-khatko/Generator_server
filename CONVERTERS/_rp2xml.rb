@@ -11,9 +11,6 @@ include System::Collections::Generic
 include Axure::Document
 
 MAX_WIDGET_NAME_LENGTH=15
-VARIOUS = 'VARIOUS'
-DETERMINISTIC = 'DETERMINISTIC'
-EXPECTED = 'EXPECTED'
 
 class RP
 	attr_reader :id,:parent_id,:type
@@ -219,6 +216,11 @@ def get_velements(page)
             velement.locator = $1
             velement.action = TestInfo::CHECK
             velement.data = $2            
+          elsif CHOOSE===line
+            velement = TestInfo.new($1 + page.GetHashCode.to_s, page.GetHashCode)
+            velement.locator = $1
+            velement.action = TestInfo::CHOOSE
+            velement.data = $2            
           else
             raise "unknown input type on page #{page.PackageName}, case: #{line}"
           end
@@ -284,7 +286,7 @@ def get_active_elements(widgets,wid_container)
 				da.add_page(da_page)	
 				get_active_elements(ps.Widgets.ToArray,da_page)
 			}
-    else # any other widget
+    elsif not (TestInfo::VARIOUS.include?(TestInfo.fnd_by_parent(wid_container.id).collect(&:action))) # any other non various widget
       if get_name(w) =~ /[a-zA-z]+/ 
         ee = TestInfo.new(w.GetHashCode,wid_container.id)
         ee.locator = get_name(w)
