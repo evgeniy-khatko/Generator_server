@@ -11,9 +11,6 @@ include System::Collections::Generic
 include Axure::Document
 
 MAX_WIDGET_NAME_LENGTH=15
-VARIOUS = 'VARIOUS'
-DETERMINISTIC = 'DETERMINISTIC'
-EXPECTED = 'EXPECTED'
 
 class RP
 	attr_reader :id,:parent_id,:type
