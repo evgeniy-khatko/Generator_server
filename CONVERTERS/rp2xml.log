@@ -1,0 +1,41 @@
+Load model
+generate_xml
+START
+	LaunchApp
+		start_application; action(@sync_bought=false);internal(app_started)
+LOGIN
+	Sync
+		press;condition(@sync_bought==false)
+		press; condition(@sync_bought==true)
+	info
+		press;
+	Login
+		press; condition(@pwd!='correct_pwd')
+		press; condition(@pwd=='correct_pwd'); internal(user_session_started)
+WRONGPASSWORD
+	OK
+		press;
+INFO PAGE
+	Handy Safe..
+		press;
+SYNC STARTED
+	Cancel
+		press;
+		wait_until("Cards copied")
+SYNC ENDED
+	Cancel
+		press;
+SYNC PAGE
+	Cancel
+		press;
+	Info
+		press;
+EXPLORER
+	Lock
+		press; internal(user_session_ended)
+SYNC INFO
+	Cancel
+		press;
+	$9.99
+		press; action(@sync_bought = true)
+Merge states

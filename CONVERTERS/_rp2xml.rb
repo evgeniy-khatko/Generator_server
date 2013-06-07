@@ -203,22 +203,26 @@ def get_velements(page)
         current_eq_class = nil
         events.each{|line|
           if CASE_LINE===line
-            current_eq_class = line
+            current_eq_class = $1
           elsif INPUT===line
             velement = TestInfo.new($1 + page.GetHashCode.to_s, page.GetHashCode)
+            TestInfo.objects.delete_if{ |el| el.parent_id == page.GetHashCode and TestInfo::EXPECTED.include?(el.action) }
             velement.locator = $1
             velement.action = TestInfo::ENTER
             velement.data = $2            
+            velement.eq_class = current_eq_class
           elsif SELECT===line
             velement = TestInfo.new($1 + page.GetHashCode.to_s, page.GetHashCode)
             velement.locator = $1
             velement.action = TestInfo::SELECT
             velement.data = $2            
+            velement.eq_class = current_eq_class
           elsif CHECK===line
             velement = TestInfo.new($1 + page.GetHashCode.to_s, page.GetHashCode)
             velement.locator = $1
             velement.action = TestInfo::CHECK
             velement.data = $2            
+            velement.eq_class = current_eq_class
           else
             raise "unknown input type on page #{page.PackageName}, case: #{line}"
           end
@@ -284,7 +288,7 @@ def get_active_elements(widgets,wid_container)
 				da.add_page(da_page)	
 				get_active_elements(ps.Widgets.ToArray,da_page)
 			}
-    else # any other widget
+    else # any other non various widget
       if get_name(w) =~ /[a-zA-z]+/ 
         ee = TestInfo.new(w.GetHashCode,wid_container.id)
         ee.locator = get_name(w)
